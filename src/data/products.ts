@@ -1,0 +1,125 @@
+// data/products.ts
+export const products = [
+  {
+    id: 1,
+    title: "Embossed Spot UV Business Cards",
+    slug: "embossed-spot-uv-business-cards", 
+    category: "Business Cards",
+    description:
+      "Premium embossed spot UV business cards with matt lamination. Perfect for a professional look.",
+    images: [
+      "https://graphicsfamily.com/wp-content/uploads/edd/2021/12/Free-Business-Card-Design-Gold-And-Black-Colors.jpg",
+   "https://graphicsfamily.com/wp-content/uploads/edd/2021/12/Free-Business-Card-Design-Gold-And-Black-Colors.jpg",
+   "https://graphicsfamily.com/wp-content/uploads/edd/2021/12/Free-Business-Card-Design-Gold-And-Black-Colors.jpg",
+      "https://graphicsfamily.com/wp-content/uploads/edd/2021/12/Free-Business-Card-Design-Gold-And-Black-Colors.jpg",
+    ],
+    options: {
+      size: ["92x54 mm", "85x55 mm"],
+      media: ["300 GSM", "400 GSM", "600 GSM"],
+      shape: ["Standard", "Rounded"],
+      lamination: ["Glossy", "Matt", "Velvet"],
+      corners: ["Sharp Corner", "Round Corner"],
+      embossedUV: ["Single Side", "Double Side"],
+      productionTime: ["3 Business Days", "5 Business Days", "7 Business Days"],
+    },
+    pricing: [
+      { quantity: 100, price: 660, oldPrice: 1320, discount: "50%" },
+      { quantity: 200, price: 1220, oldPrice: 2440, discount: "50%" },
+      { quantity: 300, price: 1680, oldPrice: 3360, discount: "50%" },
+      { quantity: 500, price: 2300, oldPrice: 4600, discount: "50%" },
+    ],
+  },
+  {
+    id: 2,
+    title: "Standard Business Cards",
+    slug: "standard-business-cards",
+    category: "Business Cards",
+    description:
+      "Affordable standard business cards with high-quality printing and lamination options.",
+    images: ["https://graphicsfamily.com/wp-content/uploads/edd/2021/12/Free-Business-Card-Design-Gold-And-Black-Colors.jpg",
+       "https://graphicsfamily.com/wp-content/uploads/edd/2021/12/Free-Business-Card-Design-Gold-And-Black-Colors.jpg"],
+    options: {
+      size: ["92x54 mm", "85x55 mm"],
+      media: ["250 GSM", "300 GSM"],
+      shape: ["Standard", "Rounded"],
+      lamination: ["Glossy", "Matt"],
+      corners: ["Sharp Corner", "Round Corner"],
+      embossedUV: ["None"],
+      productionTime: ["3 Business Days", "5 Business Days"],
+    },
+    pricing: [
+      { quantity: 100, price: 400, oldPrice: 800, discount: "50%" },
+      { quantity: 200, price: 700, oldPrice: 1400, discount: "50%" },
+      { quantity: 500, price: 1500, oldPrice: 3000, discount: "50%" },
+    ],
+  },
+  {
+    id: 3,
+    title: "Custom Stickers",
+    slug: "custom-stickers", 
+    category: "Labels & Stickers",
+    description:
+      "Durable and waterproof custom stickers in multiple shapes and finishes.",
+    images: ["/images/products/sticker1.png", "/images/products/sticker2.png"],
+    options: {
+      size: ["2x2 inch", "3x3 inch", "4x4 inch"],
+      media: ["Vinyl", "Paper"],
+      shape: ["Round", "Square", "Custom"],
+      lamination: ["Glossy", "Matt"],
+      corners: ["Sharp Corner"],
+      embossedUV: ["None"],
+      productionTime: ["2 Business Days", "5 Business Days"],
+    },
+    pricing: [
+      { quantity: 50, price: 300, oldPrice: 600, discount: "50%" },
+      { quantity: 100, price: 500, oldPrice: 1000, discount: "50%" },
+      { quantity: 200, price: 900, oldPrice: 1800, discount: "50%" },
+    ],
+  },
+  {
+    id: 4,
+    title: "Mono Carton Boxes",
+    slug: "mono-carton-boxes", 
+    category: "Mono Carton Boxes",
+    description:
+      "High-quality mono carton boxes for packaging products securely and attractively.",
+    images: ["/images/products/box1.png", "/images/products/box2.png"],
+    options: {
+      size: ["Small", "Medium", "Large"],
+      media: ["300 GSM", "400 GSM"],
+      shape: ["Standard"],
+      lamination: ["Glossy", "Matt"],
+      corners: ["Sharp Corner"],
+      embossedUV: ["Optional"],
+      productionTime: ["5 Business Days", "7 Business Days"],
+    },
+    pricing: [
+      { quantity: 100, price: 2000, oldPrice: 4000, discount: "50%" },
+      { quantity: 200, price: 3600, oldPrice: 7200, discount: "50%" },
+      { quantity: 500, price: 8000, oldPrice: 16000, discount: "50%" },
+    ],
+  },
+  {
+    id: 5,
+    title: "Standee Banner",
+    slug: "standee-banner", 
+    category: "Signage",
+    description:
+      "Portable and durable standee banners for promotional events and marketing.",
+    images: ["/images/products/standee1.png", "/images/products/standee2.png"],
+    options: {
+      size: ["2x5 ft", "3x6 ft"],
+      media: ["Flex", "Vinyl"],
+      shape: ["Vertical"],
+      lamination: ["Glossy", "Matt"],
+      corners: ["Sharp Corner"],
+      embossedUV: ["None"],
+      productionTime: ["2 Business Days", "4 Business Days"],
+    },
+    pricing: [
+      { quantity: 1, price: 600, oldPrice: 1200, discount: "50%" },
+      { quantity: 5, price: 2500, oldPrice: 5000, discount: "50%" },
+      { quantity: 10, price: 4500, oldPrice: 9000, discount: "50%" },
+    ],
+  },
+];
