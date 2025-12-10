@@ -112,6 +112,7 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
     input.click();
   };
 
+  console.log(product)
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 pb-6 border-b border-border last:border-0 last:pb-0">
@@ -223,10 +224,9 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
             </button>
 
             {/* Product Image and Name */}
-            <div className="flex items-center gap-4">
+            {/* <div className="flex items-center gap-4">
               <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
                 <Image
-                  // src={product?.image_urls?.[0] || 'https://via.placeholder.com/150'}
                   src={
                     product?.image_urls?.[0] ||
                     product?.product_variant_image_urls?.[0] ||
@@ -246,11 +246,62 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
                   Price: {convertPrice(Number(product?.optionPrice ? product?.optionPrice :product?.product_size_price))}
                 </p>
               </div>
+            </div> */}
+
+            <div className="flex items-center gap-4">
+              {/* PRODUCT IMAGE */}
+              <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
+                <img
+                  src={
+                    product?.image_urls?.[0] ||
+                    product?.product_variant_image_urls?.[0] ||
+                    "https://semantic-ui.com/images/wireframe/image.png"
+                  }
+                  alt={product?.name || "Product Image"}
+                  className="w-full h-full object-cover rounded-lg border"
+                />
+              </div>
+
+              {/* PRODUCT TEXT */}
+              <div className="flex flex-col">
+                <h3 className="text-lg font-bold text-gray-800">
+                  {product?.name
+                    ? product?.name
+                    : product?.product_variant_title
+                      ? product?.product_variant_title
+                      : product?.product_size || "Product"}
+                </h3>
+
+                {/* Option: Name : Value */}
+                {product?.cartItemData?.options && (
+                  <div className="text-sm text-gray-600 mt-1">
+                    {Object.values(product?.cartItemData?.options)?.map((opt: any) => (
+                      <p key={opt?.id}>
+                        <span className="font-semibold">{opt?.option_name}:</span>{" "}
+                        {opt?.value}
+                      </p>
+                    ))}
+                  </div>
+                )}
+
+                {/* PRICE */}
+                <p className="text-gray-500 text-sm mt-1">
+                  Price:{" "}
+                  {convertPrice(
+                    Number(
+                      product?.optionPrice
+                        ? product?.optionPrice
+                        : product?.product_size_price
+                    )
+                  )}
+                </p>
+              </div>
             </div>
+
 
             {/* Quantity and Total Price Section */}
             <div className="flex flex-col sm:flex-row items-center gap-4 mt-4 sm:mt-0 sm:ml-auto">
-              <div className="flex items-center border border-gray-300 rounded-md">
+              {/* <div className="flex items-center border border-gray-300 rounded-md">
                 <button
                   className="h-8 w-8 text-gray-600 hover:bg-gray-100 rounded-l-md transition-colors duration-200"
                   onClick={() => handleUpdateCart(product?.cartId, "decrease", product?.cartQty)}
@@ -266,10 +317,10 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
                 >
                   <Plus className="h-4 w-4 mx-auto" />
                 </button>
-              </div>
+              </div> */}
 
               <div className="text-right text-lg font-bold text-gray-800 w-24">
-                {convertPrice(Number(product?.optionPrice ? product?.optionPrice :"0"))}
+                {convertPrice(Number(product?.optionPrice ? product?.optionPrice : "0"))}
               </div>
             </div>
           </div>
