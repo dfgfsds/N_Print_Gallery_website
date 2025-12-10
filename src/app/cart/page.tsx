@@ -44,8 +44,10 @@ export default function CartPage() {
             ...matchingProduct,
             ...matchingVariant,
             ...matchingSize,
+            cartItemData: item,
         };
     });
+console.log(matchingProductsArray)
 
     const totalAmount = matchingProductsArray?.reduce((acc: number, item: any) => {
         const price =

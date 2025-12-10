@@ -39,7 +39,7 @@ export default function Home() {
   const filteredBanners = banners.filter(banner =>
     isMobile ? banner.type === 'Mobile View' : banner.type === 'Web View'
   );
-
+console.log(filteredBanners)
   const length = filteredBanners.length; // use filtered banners length
 
   // Auto slide
@@ -114,6 +114,7 @@ export default function Home() {
   };
 
   const handleBannerClick = (banner: any) => {
+    console.log('Banner clicked:', banner);
     if (banner?.target_url) {
       router.push(banner.target_url); // Always open in same tab
     }

@@ -44,7 +44,7 @@ export default function ProductPage() {
   const [selectedPrice, setSelectedPrice] = useState<any | null>(null);
   const [quantity, setQuantity] = useState<any | null>(0);
   const [prevQuantity, setPrevQuantity] = useState<any | null>(null);
-
+  console.log(selectedVariant?.is_custom_image_required)
   const handleSelectOption = (optionId: number, value: any) => {
     setSelectedOptions((prev) => ({
       ...prev,
@@ -196,9 +196,9 @@ export default function ProductPage() {
       const payload = getPayload(qty);
       const response = await postCartitemApi("", payload);
       if (response) {
-        // if(productData?.data?.data?.is_custom_image_required !== true){
-        //   router.push('/cart')
-        // }
+        if(productData?.data?.data?.is_custom_image_required !== true){
+          router.push('/cart')
+        }
         toast.success("Added to cart!");
         queryClient.invalidateQueries(["getCartitemsData"] as InvalidateQueryFilters);
         queryClient.invalidateQueries(["getCartitemsData"] as InvalidateQueryFilters);
@@ -970,53 +970,57 @@ ch-zoom"
 
           </div>
 
+          {selectedVariant?.is_custom_image_required === true && (
+            <>
+              {cartData?.images && cartData?.images?.length > 0 ? (
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium text-gray-700 mb-2">Uploaded Images</h3>
+                  <div className="flex gap-4 flex-wrap">
+                    {cartData?.images?.map((img: any) => (
+                      img?.image_urls?.map((url: any, index: number) => (
+                        <div key={`${img?.id}-${index}`} className="relative inline-block">
+                          <img
+                            src={url || emptyImage}
+                            alt="Uploaded"
+                            className="w-32 h-32 aspect-square object-cover rounded-lg border shadow"
+                          />
+                          <button
+                            onClick={() => onRemoveImage(img?.id, index)}
+                            className="absolute -top-2 -right-2 bg-red-600 text-white p-1 rounded-full shadow hover:bg-red-700"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ))
+                    ))}
+                  </div>
+                </div>
+              ) : null}
 
-          {cartData?.images && cartData?.images?.length > 0 ? (
-            <div className="mt-4">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Uploaded Images</h3>
-              <div className="flex gap-4 flex-wrap">
-                {cartData?.images?.map((img: any) => (
-                  img?.image_urls?.map((url: any, index: number) => (
-                    <div key={`${img?.id}-${index}`} className="relative inline-block">
-                      <img
-                        src={url || emptyImage}
-                        alt="Uploaded"
-                        className="w-32 h-32 aspect-square object-cover rounded-lg border shadow"
-                      />
-                      <button
-                        onClick={() => onRemoveImage(img?.id, index)}
-                        className="absolute -top-2 -right-2 bg-red-600 text-white p-1 rounded-full shadow hover:bg-red-700"
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
-                  ))
-                ))}
-              </div>
-            </div>
-          ) : null}
+              {/* UPLOAD BUTTON — only after cart created */}
+              {/* {productData?.data?.data?.is_custom_image_required === true && ( */}
 
-          {/* UPLOAD BUTTON — only after cart created */}
-          {/* {productData?.data?.data?.is_custom_image_required === true && ( */}
-
-          <button
-            onClick={() => {
-              const input = document.createElement("input");
-              input.type = "file";
-              input.multiple = true;
-              input.accept = "image/*";
-              input.onchange = (e: any) => {
-                const files = Array.from(e.target.files);
-                handleUploadRef(files as File[]);
-              };
-              input.click();
-            }}
-            disabled={uploading || !cartData}
-            className={`mt-3 w-full px-6 py-3 rounded-lg text-white bg-[#13cea1] hover:bg-[#4db49c]
+              <button
+                onClick={() => {
+                  const input = document.createElement("input");
+                  input.type = "file";
+                  input.multiple = true;
+                  input.accept = "image/*";
+                  input.onchange = (e: any) => {
+                    const files = Array.from(e.target.files);
+                    handleUploadRef(files as File[]);
+                  };
+                  input.click();
+                }}
+                disabled={uploading || !cartData}
+                className={`mt-3 w-full px-6 py-3 rounded-lg text-white bg-[#13cea1] hover:bg-[#4db49c]
   ${uploading || !cartData ? "opacity-50 cursor-not-allowed" : ""}`}
-          >
-            {uploading ? "Uploading..." : "Upload Designs"}
-          </button>
+              >
+                {uploading ? "Uploading..." : "Upload Designs"}
+              </button>
+            </>
+          )}
+
           {/* // )} */}
 
           {/* GO TO CART BUTTON — only after image upload */}
