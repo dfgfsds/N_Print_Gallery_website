@@ -124,7 +124,7 @@ console.log(filteredBanners)
     <div>
       <div className="relative w-full">
         <div className="relative h-80 overflow-hidden  md:h-96">
-          {filteredBanners?.map((img, index) => (
+          {filteredBanners?.filter((img: any) => img?.is_offer === false)?.map((img, index) => (
             <div
               key={index}
               className={`absolute top-0 left-0 w-full h-full transition-opacity duration-700 ${index === current ? "opacity-100" : "opacity-0"
