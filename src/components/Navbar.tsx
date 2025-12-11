@@ -42,10 +42,12 @@ export default function Navbar() {
   const [openModal, setOpenModal] = useState(false);
 
   const menuItems =
-    categories?.data?.map((cat: any) => {
+    categories?.data
+      ?.filter((cat: any) => cat.is_featured === true)
+    ?.map((cat: any) => {
       // all products in this category
       const categoryProducts = products?.data?.products?.filter(
-        (p: any) => p.category === cat.id  && p?.is_featured === true
+        (p: any) => p.category === cat.id 
       );
 
       // if category has subcategories
@@ -53,7 +55,7 @@ export default function Navbar() {
         cat.subcategories?.length > 0
           ? cat.subcategories.map((sub: any) => {
             const subProducts = categoryProducts?.filter(
-              (p: any) => p.subcategory === sub.id && p.is_featured === true
+              (p: any) => p.subcategory === sub.id
             );
             return {
               heading: sub.name,
