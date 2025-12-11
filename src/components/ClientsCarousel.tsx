@@ -164,6 +164,141 @@
 //   );
 // }
 
+// "use client";
+// import { useEffect, useState, useMemo, useCallback } from "react";
+// import Image from "next/image";
+// import axios from "axios";
+// import { baseUrl } from "@/api-endpoints/ApiUrls";
+// import { useVendor } from "@/context/VendorContext";
+// import { useSwipeable } from "react-swipeable";
+// import EmptyImage from "../../public/images/emptyImage.png";
+
+// export default function ClientsCarousel() {
+//   const [clients, setClients] = useState<any[]>([]);
+//   const { vendorId } = useVendor();
+//   const [current, setCurrent] = useState(0);
+
+//   // Fetch Data
+//   const fetchClients = useCallback(async () => {
+//     try {
+//       const res = await axios.get(`${baseUrl}/our-client/?vendorId=${vendorId}`);
+//       setClients(res.data?.clients || []);
+//     } catch { }
+//   }, [vendorId]);
+
+//   useEffect(() => {
+//     fetchClients();
+//   }, [fetchClients]);
+
+//   // KEEP YOUR SAME BREAKPOINT LOGIC 👇
+//   const getItemsPerSlide = () => {
+//     if (typeof window !== "undefined") {
+//       if (window.innerWidth >= 1280) return 6;
+//       if (window.innerWidth >= 1024) return 4;
+//       if (window.innerWidth >= 768) return 3;
+//     }
+//     return 2;
+//   };
+
+//   const [itemsPerSlide, setItemsPerSlide] = useState(getItemsPerSlide());
+
+//   useEffect(() => {
+//     const resize = () => setItemsPerSlide(getItemsPerSlide());
+//     window.addEventListener("resize", resize);
+//     return () => window.removeEventListener("resize", resize);
+//   }, []);
+
+//   // Infinite Loop Logic (NO EMPTY SPACE BUG)
+//   const loopedClients = useMemo(() => {
+//     if (clients.length === 0) return [];
+
+//     let repeated = [...clients];
+//     while (repeated.length < itemsPerSlide * 10) {
+//       repeated = [...repeated, ...clients];
+//     }
+//     return repeated;
+//   }, [clients, itemsPerSlide]);
+
+//   // REAL slide count (for dots + pointer)
+//   const realSlides = Math.ceil(clients.length / itemsPerSlide);
+
+//   // NEXT SLIDE (no empty space)
+//   const nextSlide = useCallback(() => {
+//     setCurrent((p) => (p >= realSlides - 1 ? 0 : p + 1));
+//   }, [realSlides]);
+
+//   // PREV SLIDE
+//   const prevSlide = useCallback(() => {
+//     setCurrent((p) => (p <= 0 ? realSlides - 1 : p - 1));
+//   }, [realSlides]);
+
+//   // AUTOPLAY
+//   useEffect(() => {
+//     const id = setTimeout(nextSlide, 3000);
+//     return () => clearTimeout(id);
+//   }, [current, nextSlide]);
+
+//   // SWIPE
+//   const handlers = useSwipeable({
+//     onSwipedLeft: nextSlide,
+//     onSwipedRight: prevSlide,
+//     trackMouse: true,
+//   });
+
+//   if (clients.length === 0) return null;
+
+//   return (
+//     <section className="mx-auto px-2 py-16">
+//       <div className="text-center mb-6">
+//         <h2 className="text-2xl text-gray-700 font-bold">Our Clients</h2>
+//         <div className="w-20 h-1 bg-[#13cea1] mx-auto mt-2 rounded"></div>
+//       </div>
+
+//       <div className="relative overflow-hidden" {...handlers}>
+//         {/* SLIDER */}
+//         <div
+//           className="flex transition-transform duration-500 ease-out"
+//           style={{
+//             transform: `translateX(-${current * 100}%)`,
+//           }}
+//         >
+//           {loopedClients.map((client, idx) => (
+//             <div
+//               key={idx}
+//               className="flex-shrink-0 flex justify-center items-center px-4"
+//               style={{
+//                 width: `${100 / itemsPerSlide}%`, // 6 / 4 / 3 / 2 correctly
+//               }}
+//             >
+//               <div className="p-4 flex items-center justify-center h-28 sm:h-32 md:h-36 lg:h-40 xl:h-44">
+//                 <Image
+//                   src={client?.image_url || EmptyImage}
+//                   alt={client?.name || "Client Logo"}
+//                   width={200}
+//                   height={200}
+//                   className="object-contain"
+//                 />
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* DOTS */}
+//         <div className="flex justify-center mt-6 gap-2">
+//           {Array.from({ length: realSlides }).map((_, idx) => (
+//             <button
+//               key={idx}
+//               onClick={() => setCurrent(idx)}
+//               className={`w-3 h-3 rounded-full transition-all ${idx === current ? "bg-gray-800 w-4" : "bg-gray-300"
+//                 }`}
+//             />
+//           ))}
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
+
 "use client";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import Image from "next/image";
@@ -178,7 +313,6 @@ export default function ClientsCarousel() {
   const { vendorId } = useVendor();
   const [current, setCurrent] = useState(0);
 
-  // Fetch Data
   const fetchClients = useCallback(async () => {
     try {
       const res = await axios.get(`${baseUrl}/our-client/?vendorId=${vendorId}`);
@@ -190,7 +324,7 @@ export default function ClientsCarousel() {
     fetchClients();
   }, [fetchClients]);
 
-  // KEEP YOUR SAME BREAKPOINT LOGIC 👇
+  // BREAKPOINT ITEMS
   const getItemsPerSlide = () => {
     if (typeof window !== "undefined") {
       if (window.innerWidth >= 1280) return 6;
@@ -208,29 +342,29 @@ export default function ClientsCarousel() {
     return () => window.removeEventListener("resize", resize);
   }, []);
 
-  // Infinite Loop Logic (NO EMPTY SPACE BUG)
+  // ⭐ MAKE A LONG LOOP — no empty space
   const loopedClients = useMemo(() => {
-    if (clients.length === 0) return [];
-
-    let repeated = [...clients];
-    while (repeated.length < itemsPerSlide * 10) {
-      repeated = [...repeated, ...clients];
+    if (!clients.length) return [];
+    let arr = [...clients];
+    while (arr.length < clients.length * 8) {
+      arr = [...arr, ...clients];
     }
-    return repeated;
-  }, [clients, itemsPerSlide]);
+    return arr;
+  }, [clients]);
 
-  // REAL slide count (for dots + pointer)
-  const realSlides = Math.ceil(clients.length / itemsPerSlide);
+  // ⭐ TOTAL REAL DOTS (not looped)
+  const totalDots = clients.length;
 
-  // NEXT SLIDE (no empty space)
+  // ⭐ REAL ITEMS MOVE = 1 item only
+  const movePercentage = 100 / itemsPerSlide;
+
   const nextSlide = useCallback(() => {
-    setCurrent((p) => (p >= realSlides - 1 ? 0 : p + 1));
-  }, [realSlides]);
+    setCurrent((p) => p + 1);
+  }, []);
 
-  // PREV SLIDE
   const prevSlide = useCallback(() => {
-    setCurrent((p) => (p <= 0 ? realSlides - 1 : p - 1));
-  }, [realSlides]);
+    setCurrent((p) => (p === 0 ? totalDots - 1 : p - 1));
+  }, [totalDots]);
 
   // AUTOPLAY
   useEffect(() => {
@@ -238,14 +372,15 @@ export default function ClientsCarousel() {
     return () => clearTimeout(id);
   }, [current, nextSlide]);
 
-  // SWIPE
   const handlers = useSwipeable({
     onSwipedLeft: nextSlide,
     onSwipedRight: prevSlide,
     trackMouse: true,
   });
 
-  if (clients.length === 0) return null;
+  if (!clients.length) return null;
+
+  const activeDot = current % totalDots;
 
   return (
     <section className="mx-auto px-2 py-16">
@@ -255,25 +390,24 @@ export default function ClientsCarousel() {
       </div>
 
       <div className="relative overflow-hidden" {...handlers}>
+        
         {/* SLIDER */}
         <div
           className="flex transition-transform duration-500 ease-out"
           style={{
-            transform: `translateX(-${current * 100}%)`,
+            transform: `translateX(-${current * movePercentage}%)`,
           }}
         >
           {loopedClients.map((client, idx) => (
             <div
               key={idx}
               className="flex-shrink-0 flex justify-center items-center px-4"
-              style={{
-                width: `${100 / itemsPerSlide}%`, // 6 / 4 / 3 / 2 correctly
-              }}
+              style={{ width: `${100 / itemsPerSlide}%` }}
             >
               <div className="p-4 flex items-center justify-center h-28 sm:h-32 md:h-36 lg:h-40 xl:h-44">
                 <Image
                   src={client?.image_url || EmptyImage}
-                  alt={client?.name || "Client Logo"}
+                  alt={client?.title || "Client logo"}
                   width={200}
                   height={200}
                   className="object-contain"
@@ -285,12 +419,13 @@ export default function ClientsCarousel() {
 
         {/* DOTS */}
         <div className="flex justify-center mt-6 gap-2">
-          {Array.from({ length: realSlides }).map((_, idx) => (
+          {Array.from({ length: totalDots }).map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrent(idx)}
-              className={`w-3 h-3 rounded-full transition-all ${idx === current ? "bg-gray-800 w-4" : "bg-gray-300"
-                }`}
+              className={`w-3 h-3 rounded-full transition-all ${
+                idx === activeDot ? "bg-gray-800 w-4" : "bg-gray-300"
+              }`}
             />
           ))}
         </div>

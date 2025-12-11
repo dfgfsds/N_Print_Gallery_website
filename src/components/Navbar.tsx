@@ -45,7 +45,7 @@ export default function Navbar() {
     categories?.data?.map((cat: any) => {
       // all products in this category
       const categoryProducts = products?.data?.products?.filter(
-        (p: any) => p.category === cat.id
+        (p: any) => p.category === cat.id  && p?.is_featured === true
       );
 
       // if category has subcategories
@@ -53,7 +53,7 @@ export default function Navbar() {
         cat.subcategories?.length > 0
           ? cat.subcategories.map((sub: any) => {
             const subProducts = categoryProducts?.filter(
-              (p: any) => p.subcategory === sub.id
+              (p: any) => p.subcategory === sub.id && p.is_featured === true
             );
             return {
               heading: sub.name,
