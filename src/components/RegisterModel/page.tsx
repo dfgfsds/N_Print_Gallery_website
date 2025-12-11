@@ -79,7 +79,7 @@ function RegisterModel({open,handleClose}:any) {
     if (!mounted || !open) return null;
 
     return createPortal(
-        <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-[999]">
+        <div className="fixed inset-0 bg-black/10 flex justify-center items-center z-[999]">
             <div className="bg-white p-6 rounded-lg shadow-lg w-[500px]" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between">
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -174,7 +174,7 @@ function RegisterModel({open,handleClose}:any) {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full flex gap-2 justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                className="w-full flex gap-2 justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#13cea1] hover:bg-[#4db49c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                             >
                                 Create Account {loading && <Loader className='animate-spin' />}
                             </button>

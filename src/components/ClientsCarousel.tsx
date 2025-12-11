@@ -1,5 +1,5 @@
 // "use client";
-// import { useEffect, useState, useRef } from "react";
+// import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 // import Image from "next/image";
 // import axios from "axios";
 // import { baseUrl } from "@/api-endpoints/ApiUrls";
@@ -7,11 +7,13 @@
 // import { useSwipeable } from "react-swipeable";
 // import EmptyImage from '../../public/images/emptyImage.png';
 
+// const CLONE_COUNT = 10; 
+
 // export default function ClientsCarousel() {
 //   const [clients, setClients] = useState<any[]>([]);
 //   const { vendorId } = useVendor();
 
-//   const ourClientGetApi = async () => {
+//   const ourClientGetApi = useCallback(async () => {
 //     try {
 //       const res = await axios.get(`${baseUrl}/our-client/?vendorId=${vendorId}`);
 //       if (res.data?.clients) {
@@ -20,53 +22,97 @@
 //         console.warn("Unexpected API response:", res.data);
 //       }
 //     } catch (error) {
-//       // console.log("Error fetching banners:", error);
+
 //     }
-//   };
+//   }, [vendorId]);
 
 //   useEffect(() => {
 //     ourClientGetApi();
-//   }, []);
+//   }, [ourClientGetApi]);
 
 //   const [current, setCurrent] = useState(0);
+//   const [isTransitioning, setIsTransitioning] = useState(true);
 //   const timeoutRef = useRef<any>(null);
 
-//   // Responsive items per slide
 //   const getItemsPerSlide = () => {
 //     if (typeof window !== "undefined") {
-//       if (window.innerWidth >= 1280) return 6; // xl & lg
-//       if (window.innerWidth >= 1024) return 4; // md
-//       if (window.innerWidth >= 640) return 3;  // sm
+//       if (window.innerWidth >= 1280) return 6; 
+//       if (window.innerWidth >= 1024) return 4; 
+//       if (window.innerWidth >= 768) return 3;  
 //     }
-//     return 2; // mobile
+//     return 2; 
 //   };
 
 //   const [itemsPerSlide, setItemsPerSlide] = useState(getItemsPerSlide());
 
-//   // Handle resize
 //   useEffect(() => {
 //     const handleResize = () => setItemsPerSlide(getItemsPerSlide());
 //     window.addEventListener("resize", handleResize);
 //     return () => window.removeEventListener("resize", handleResize);
 //   }, []);
 
-//   // Calculate total slides correctly
-//   const totalSlides = Math.ceil(clients.length / itemsPerSlide);
+//   const loopedClients = useMemo(() => {
+//     if (clients.length === 0) return [];
+//     const clones = clients.slice(0, Math.min(CLONE_COUNT, clients.length));
+//     return [...clients, ...clones];
+//   }, [clients]);
 
-//   // Auto-scroll
+//   const totalSlides = Math.ceil(clients.length / itemsPerSlide); 
+
+//   const totalEffectiveSlides = Math.ceil(loopedClients.length / itemsPerSlide);
+
+//   const nextSlide = useCallback(() => {
+//     setCurrent(prev => {
+//       const next = prev + 1;
+//       if (next >= totalEffectiveSlides) {
+//         setIsTransitioning(false);
+//         setTimeout(() => {
+//           setCurrent(0);
+//           setIsTransitioning(true);
+//         }, 50); 
+//         return prev; 
+//       }
+//       return next;
+//     });
+//   }, [totalEffectiveSlides]);
+
+//   const prevSlide = useCallback(() => {
+//     setCurrent(prev => {
+//       const next = prev - 1;
+//       if (next < 0) {
+//         const lastEffectiveSlideIndex = totalEffectiveSlides - 1;
+
+//         setIsTransitioning(false);
+
+//         setTimeout(() => {
+//             const jumpBackIndex = totalSlides - 1; 
+//             setCurrent(jumpBackIndex);
+//             setIsTransitioning(true);
+//         }, 50);
+
+//         return lastEffectiveSlideIndex;
+//       }
+//       return next;
+//     });
+//   }, [totalEffectiveSlides, totalSlides]);
+
 //   useEffect(() => {
-//     timeoutRef.current = setTimeout(() => {
-//       setCurrent((prev) => (prev >= totalSlides - 1 ? 0 : prev + 1));
-//     }, 3000);
-//     return () => clearTimeout(timeoutRef.current);
-//   }, [current, totalSlides]);
+//     clearTimeout(timeoutRef.current);
 
-//   // Swipe Handlers
+//     timeoutRef.current = setTimeout(nextSlide, 3000);
+
+//     return () => clearTimeout(timeoutRef.current);
+//   }, [current, nextSlide]);
+
 //   const handlers = useSwipeable({
-//     onSwipedLeft: () => setCurrent((prev) => (prev >= totalSlides - 1 ? 0 : prev + 1)),
-//     onSwipedRight: () => setCurrent((prev) => (prev <= 0 ? totalSlides - 1 : prev - 1)),
+//     onSwipedLeft: nextSlide,
+//     onSwipedRight: prevSlide,
 //     trackMouse: true,
 //   });
+
+//   if (clients.length === 0) {
+//     return null; 
+//   }
 
 //   return (
 //     <section className="mx-auto px-2 py-16">
@@ -76,14 +122,16 @@
 //       </div>
 
 //       <div className="relative overflow-hidden" {...handlers}>
-//         {/* Slides wrapper */}
 //         <div
-//           className="flex transition-transform duration-500"
-//           style={{ transform: `translateX(-${current * 100}%)` }}
+//           className="flex"
+//           style={{ 
+//             transform: `translateX(-${current * 100}%)`,
+//             transition: isTransitioning ? 'transform 500ms ease-in-out' : 'none'
+//           }}
 //         >
-//           {clients.map((client, idx) => (
+//           {loopedClients.map((client, idx) => (
 //             <div
-//               key={idx}
+//               key={idx} 
 //               className="flex-shrink-0 flex justify-center items-center px-4"
 //               style={{ width: `${100 / itemsPerSlide}%` }}
 //             >
@@ -100,14 +148,13 @@
 //           ))}
 //         </div>
 
-//         {/* Dots */}
 //         <div className="flex justify-center mt-6 gap-2">
 //           {Array.from({ length: totalSlides }).map((_, idx) => (
 //             <button
 //               key={idx}
 //               onClick={() => setCurrent(idx)}
 //               className={`w-3 h-3 rounded-full transition-all ${
-//                 idx === current ? "bg-gray-800 w-4" : "bg-gray-300"
+//                 idx === (current % totalSlides) ? "bg-gray-800 w-4" : "bg-gray-300"
 //               }`}
 //             />
 //           ))}
@@ -117,122 +164,88 @@
 //   );
 // }
 
-
 "use client";
-import { useEffect, useState, useRef, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import Image from "next/image";
 import axios from "axios";
 import { baseUrl } from "@/api-endpoints/ApiUrls";
 import { useVendor } from "@/context/VendorContext";
 import { useSwipeable } from "react-swipeable";
-import EmptyImage from '../../public/images/emptyImage.png';
-
-const CLONE_COUNT = 10; 
+import EmptyImage from "../../public/images/emptyImage.png";
 
 export default function ClientsCarousel() {
   const [clients, setClients] = useState<any[]>([]);
   const { vendorId } = useVendor();
+  const [current, setCurrent] = useState(0);
 
-  const ourClientGetApi = useCallback(async () => {
+  // Fetch Data
+  const fetchClients = useCallback(async () => {
     try {
       const res = await axios.get(`${baseUrl}/our-client/?vendorId=${vendorId}`);
-      if (res.data?.clients) {
-        setClients(res?.data?.clients);
-      } else {
-        console.warn("Unexpected API response:", res.data);
-      }
-    } catch (error) {
-
-    }
+      setClients(res.data?.clients || []);
+    } catch { }
   }, [vendorId]);
 
   useEffect(() => {
-    ourClientGetApi();
-  }, [ourClientGetApi]);
+    fetchClients();
+  }, [fetchClients]);
 
-  const [current, setCurrent] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(true);
-  const timeoutRef = useRef<any>(null);
-
+  // KEEP YOUR SAME BREAKPOINT LOGIC 👇
   const getItemsPerSlide = () => {
     if (typeof window !== "undefined") {
-      if (window.innerWidth >= 1280) return 6; 
-      if (window.innerWidth >= 1024) return 4; 
-      if (window.innerWidth >= 768) return 3;  
+      if (window.innerWidth >= 1280) return 6;
+      if (window.innerWidth >= 1024) return 4;
+      if (window.innerWidth >= 768) return 3;
     }
-    return 2; 
+    return 2;
   };
 
   const [itemsPerSlide, setItemsPerSlide] = useState(getItemsPerSlide());
 
   useEffect(() => {
-    const handleResize = () => setItemsPerSlide(getItemsPerSlide());
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const resize = () => setItemsPerSlide(getItemsPerSlide());
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
   }, []);
 
+  // Infinite Loop Logic (NO EMPTY SPACE BUG)
   const loopedClients = useMemo(() => {
     if (clients.length === 0) return [];
-    const clones = clients.slice(0, Math.min(CLONE_COUNT, clients.length));
-    return [...clients, ...clones];
-  }, [clients]);
 
-  const totalSlides = Math.ceil(clients.length / itemsPerSlide); 
+    let repeated = [...clients];
+    while (repeated.length < itemsPerSlide * 10) {
+      repeated = [...repeated, ...clients];
+    }
+    return repeated;
+  }, [clients, itemsPerSlide]);
 
-  const totalEffectiveSlides = Math.ceil(loopedClients.length / itemsPerSlide);
+  // REAL slide count (for dots + pointer)
+  const realSlides = Math.ceil(clients.length / itemsPerSlide);
 
+  // NEXT SLIDE (no empty space)
   const nextSlide = useCallback(() => {
-    setCurrent(prev => {
-      const next = prev + 1;
-      if (next >= totalEffectiveSlides) {
-        setIsTransitioning(false);
-        setTimeout(() => {
-          setCurrent(0);
-          setIsTransitioning(true);
-        }, 50); 
-        return prev; 
-      }
-      return next;
-    });
-  }, [totalEffectiveSlides]);
+    setCurrent((p) => (p >= realSlides - 1 ? 0 : p + 1));
+  }, [realSlides]);
 
+  // PREV SLIDE
   const prevSlide = useCallback(() => {
-    setCurrent(prev => {
-      const next = prev - 1;
-      if (next < 0) {
-        const lastEffectiveSlideIndex = totalEffectiveSlides - 1;
-      
-        setIsTransitioning(false);
-        
-        setTimeout(() => {
-            const jumpBackIndex = totalSlides - 1; 
-            setCurrent(jumpBackIndex);
-            setIsTransitioning(true);
-        }, 50);
+    setCurrent((p) => (p <= 0 ? realSlides - 1 : p - 1));
+  }, [realSlides]);
 
-        return lastEffectiveSlideIndex;
-      }
-      return next;
-    });
-  }, [totalEffectiveSlides, totalSlides]);
-
+  // AUTOPLAY
   useEffect(() => {
-    clearTimeout(timeoutRef.current);
-
-    timeoutRef.current = setTimeout(nextSlide, 3000);
-
-    return () => clearTimeout(timeoutRef.current);
+    const id = setTimeout(nextSlide, 3000);
+    return () => clearTimeout(id);
   }, [current, nextSlide]);
 
+  // SWIPE
   const handlers = useSwipeable({
     onSwipedLeft: nextSlide,
     onSwipedRight: prevSlide,
     trackMouse: true,
   });
 
-  if (clients.length === 0) {
-    return null; 
-  }
+  if (clients.length === 0) return null;
 
   return (
     <section className="mx-auto px-2 py-16">
@@ -242,18 +255,20 @@ export default function ClientsCarousel() {
       </div>
 
       <div className="relative overflow-hidden" {...handlers}>
+        {/* SLIDER */}
         <div
-          className="flex"
-          style={{ 
+          className="flex transition-transform duration-500 ease-out"
+          style={{
             transform: `translateX(-${current * 100}%)`,
-            transition: isTransitioning ? 'transform 500ms ease-in-out' : 'none'
           }}
         >
           {loopedClients.map((client, idx) => (
             <div
-              key={idx} 
+              key={idx}
               className="flex-shrink-0 flex justify-center items-center px-4"
-              style={{ width: `${100 / itemsPerSlide}%` }}
+              style={{
+                width: `${100 / itemsPerSlide}%`, // 6 / 4 / 3 / 2 correctly
+              }}
             >
               <div className="p-4 flex items-center justify-center h-28 sm:h-32 md:h-36 lg:h-40 xl:h-44">
                 <Image
@@ -268,14 +283,14 @@ export default function ClientsCarousel() {
           ))}
         </div>
 
+        {/* DOTS */}
         <div className="flex justify-center mt-6 gap-2">
-          {Array.from({ length: totalSlides }).map((_, idx) => (
+          {Array.from({ length: realSlides }).map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrent(idx)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                idx === (current % totalSlides) ? "bg-gray-800 w-4" : "bg-gray-300"
-              }`}
+              className={`w-3 h-3 rounded-full transition-all ${idx === current ? "bg-gray-800 w-4" : "bg-gray-300"
+                }`}
             />
           ))}
         </div>
