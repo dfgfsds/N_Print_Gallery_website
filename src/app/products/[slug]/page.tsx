@@ -175,28 +175,12 @@ export default function ProductPage() {
     }, {}),
   });
 
-
-  const handleSelectSize = (size: any) => {
-    setSelectedSize(size);
-    setActiveIndex(0); // Reset the image gallery to the first image
-  };
-
-  const handleSelectVariant = (variant: any) => {
-    setSelectedVariant(variant);
-    // Set the first size of the new variant as the selected size
-    if (variant?.sizes?.length > 0) {
-      setSelectedSize(variant.sizes[0]);
-    } else {
-      setSelectedSize(null);
-    }
-  };
-
   const handleAddCart = async (qty: any) => {
     try {
       const payload = getPayload(qty);
       const response = await postCartitemApi("", payload);
       if (response) {
-        if(productData?.data?.data?.is_custom_image_required !== true){
+        if (productData?.data?.data?.is_custom_image_required !== true) {
           router.push('/cart')
         }
         toast.success("Added to cart!");
@@ -256,9 +240,6 @@ export default function ProductPage() {
 
   const onRemoveImage = async (imageId: number, index: number) => {
     try {
-      // const response = await axios.delete(
-      //   `${baseUrl}/cart-item-images/${imageId}/`
-      // );
       const response = await axios.delete(
         `${baseUrl}/cart-item-images-delete/${imageId}/?index=${index}&media_type=image`
       );
@@ -273,88 +254,6 @@ export default function ProductPage() {
   if (!products || products?.data?.length === 0) {
     return <p>Loading products...</p>;
   }
-
-  // function ProductImageGallery({ images, name }: any) {
-
-  //   const handlePrev = () => {
-  //     setActiveIndex((prev) => (prev === 0 ? images?.length - 1 : prev - 1));
-  //   };
-
-  //   const handleNext = () => {
-  //     setActiveIndex((prev) => (prev === images?.length - 1 ? 0 : prev + 1));
-  //   };
-
-  //   useEffect(() => {
-  //     if (images?.length > 1) { // 🔹 Only auto-scroll if there's more than one image
-  //       const timer = setInterval(handleNext, 5000);
-  //       return () => clearInterval(timer);
-  //     }
-  //   }, [images?.length]);
-
-  //   const handleTouchStart = (e: React.TouchEvent) => {
-  //     touchStartX.current = e.touches[0].clientX;
-  //   };
-
-  //   const handleTouchEnd = (e: React.TouchEvent) => {
-  //     if (touchStartX.current === null) return;
-
-  //     const touchEndX = e.changedTouches[0].clientX;
-  //     const diff = touchStartX.current - touchEndX;
-
-  //     if (diff > 50) {
-  //       handleNext();
-  //     } else if (diff < -50) {
-  //       handlePrev();
-  //     }
-
-  //     touchStartX.current = null;
-  //   };
-
-  //   return (
-  //     <div className="sticky top-0 flex flex-col items-center space-y-4">
-  //       <div className="relative w-full max-w-md h-auto">
-  //         <img
-  //           src={images[activeIndex] || emptyImage}
-  //           alt={name}
-  //           className="w-full h-auto object-contain rounded-xl shadow-lg"
-  //         />
-
-  //         {/* Navigation Buttons */}
-  //         <button
-  //           onClick={handlePrev}
-  //           className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 p-2 rounded-full shadow"
-  //         >
-  //           <ChevronLeft />
-  //         </button>
-  //         <button
-  //           onClick={handleNext}
-  //           className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 p-2 rounded-full shadow"
-  //         >
-  //           <ChevronRight />
-  //         </button>
-  //       </div>
-
-  //       {/* Thumbnails */}
-  //       <div className="flex gap-2 min-w-10/11 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
-  //         {images.map((img: any, idx: number) => (
-  //           <button
-  //             key={idx}
-  //             onClick={() => setActiveIndex(idx)}
-  //             className={`border-2 rounded-lg overflow-hidden flex-shrink-0 ${activeIndex === idx ? "border-blue-500" : "border-transparent"}`}
-  //           >
-  //             <img
-  //               src={img || emptyImage}
-  //               alt={`${name} thumbnail ${idx + 1}`}
-  //               className="w-20 h-20 object-cover rounded-md"
-  //             />
-  //           </button>
-  //         ))}
-  //       </div>
-
-  //     </div>
-
-  //   );
-  // }
 
   function ProductImageGallery({ images, name }: any) {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -411,10 +310,16 @@ export default function ProductPage() {
             onMouseLeave={() => window.innerWidth > 768 && setShowLens(false)}
             onClick={() => window.innerWidth < 768 && setMobileZoom(true)} // ⭐ MOBILE TAP TO ZOOM
           >
-            <img
+            {/* <img
               src={images[activeIndex] || emptyImage}
               alt={name}
               className="w-full h-auto object-contain rounded-xl shadow-lg"
+            /> */}
+
+            <img
+              src={images[activeIndex] || emptyImage}
+              alt={name}
+              className="max:w-full max:h-[1000px] object-contain rounded-xl shadow-lg"
             />
 
             {/* DESKTOP LENS */}
@@ -534,6 +439,7 @@ ch-zoom"
 
     }
   }
+
   // deleteWishListApi
   const handleDeleteWishList = async () => {
     try {
@@ -549,7 +455,6 @@ ch-zoom"
     } catch (error) {
 
     }
-
   }
 
   const { id }: any = useParams();
@@ -557,12 +462,9 @@ ch-zoom"
 
   useEffect(() => {
     const fetchOptionPrice = async () => {
-      // Allow API even if only quantity changes
       if (!product?.id || quantity === undefined) return;
 
       let apiUrl = `${ApiUrls.getSingleProductWithOptionsPrice}?product=${product?.id}&quantity=${quantity || 1}`;
-
-      // Append selected options only if available
       Object.entries(selectedOptions || {}).forEach(([optionId, value]: any) => {
         if (value?.id) {
           apiUrl += `&optionId=${optionId}&valueId=${value.id}`;
@@ -572,7 +474,6 @@ ch-zoom"
       try {
         const res = await axios.get(apiUrl);
 
-        // Only update if value actually changed
         setSelectedPrice((prev: any) => {
           if (JSON.stringify(prev) !== JSON.stringify(res?.data?.data)) {
             return res?.data?.data;
@@ -580,7 +481,6 @@ ch-zoom"
           return prev;
         });
       } catch (error) {
-        // console.log("Error fetching option price", error);
       }
     };
 
@@ -610,12 +510,11 @@ ch-zoom"
       return options;
     }
 
-    // CASE 2: Min > 1 → increments of min itself (100→200→300…)
     let current = minQty;
 
     while (current <= maxQty) {
       options.push(current);
-      current += minQty; // add minQty each time
+      current += minQty;
     }
 
     return options;
@@ -629,8 +528,6 @@ ch-zoom"
     }
   }, []);
 
-
-
   return (
     <>
       {/* <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 pt-10 pb-2 px-6 bg-white"> */}
@@ -643,10 +540,6 @@ ch-zoom"
             <span className="text-gray-800 font-medium truncate">{selectedVariant?.name ? selectedVariant?.name : selectedVariant?.product_variant_title}</span>
           </nav>
 
-          {/* <ProductImageGallery
-            images={selectedVariant?.image_urls ? selectedVariant?.image_urls : selectedVariant?.product_variant_image_urls || []}
-            name={selectedVariant?.product_variant_title || "Product"}
-          /> */}
           <div className="relative h-full">
             <ProductImageGallery
               images={selectedVariant?.image_urls || selectedVariant?.product_variant_image_urls || []}
@@ -683,8 +576,6 @@ ch-zoom"
               </button>
             )}
           </div>
-
-          {/* Options Rendering */}
 
           {productData?.data?.data?.product?.options?.length > 0 ? (
             <div className="py-5">
@@ -744,29 +635,6 @@ ch-zoom"
 
               <div className="mt-4 flex items-center justify-between w-full">
                 <label className="text-slate-600 font-bold w-1/3 text-md">Quantity</label>
-                {/* <input
-                  type="text"   
-                  placeholder="Enter Quantity"
-                  className="border border-[#D9D9D9] rounded-md px-3 py-2 w-2/3 h-[45px] focus:border-blue-400 outline-none"
-                  value={quantity}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === "") {
-                      setQuantity("");
-                      return;
-                    }
-                    if (!/^\d+$/.test(val)) return;
-                    if (Number(val) < 1) return;
-                    setQuantity(val);
-                    if (!cartData) return;
-                    const numPrev = Number(prevQuantity);
-                    const num = Number(val);
-                    setPrevQuantity(val);
-                  }}
-                  onKeyDown={(e) => {
-                    if (["e", "E", "-", "+", "."].includes(e.key)) e.preventDefault();
-                  }}
-                /> */}
                 <select
                   className="border border-[#D9D9D9] rounded-md px-3 py-2 w-2/3 h-[45px]"
                   value={quantity}
@@ -784,32 +652,8 @@ ch-zoom"
           ) : (
             /* 🔹 If NO options, show ONLY quantity nicely */
             <div className="py-5">
-              {/* <h3 className="font-semibold mb-3 text-lg">Enter Quantity</h3> */}
               <div className="flex items-center justify-between w-full">
                 <label className="text-slate-600 font-bold w-1/3 text-md">Quantity</label>
-                {/* <input
-                  type="text"  
-                  placeholder="Enter Quantity"
-                  className="border border-[#D9D9D9] rounded-md px-3 py-2 w-2/3 h-[45px] focus:border-blue-400 outline-none"
-                  value={quantity}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === "") {
-                      setQuantity("");
-                      return;
-                    }
-                    if (!/^\d+$/.test(val)) return;
-                    if (Number(val) < 1) return;
-                    setQuantity(val);
-                    if (!cartData) return;
-                    const numPrev = Number(prevQuantity);
-                    const num = Number(val);
-                    setPrevQuantity(val);
-                  }}
-                  onKeyDown={(e) => {
-                    if (["e", "E", "-", "+", "."].includes(e.key)) e.preventDefault();
-                  }}
-                /> */}
                 <select
                   className="border border-[#D9D9D9] rounded-md px-3 py-2 w-2/3 h-[45px]"
                   value={quantity}
@@ -896,56 +740,6 @@ ch-zoom"
           )}
 
           <div className="mt-8">
-            {/* {cartData ? (
-              <div className="flex items-center justify-center mt-4 space-x-4">
-                <button
-                  onClick={() => handleUpdateCart(cartData.cartId, 'decrease', cartData.quantity)}
-                  disabled={cartData.quantity <= 1}
-                  className="bg-[#13cea1] text-white px-3 py-1 rounded hover:bg-[#4db49c] disabled:opacity-50"
-                >
-                  −
-                </button>
-                <span className="text-[#4db49c] font-semibold text-lg">{cartData.quantity}</span>
-                <button
-                  onClick={() => handleUpdateCart(cartData.cartId, 'increase', '')}
-                  className="bg-[#13cea1] text-white px-3 py-1 rounded hover:bg-[#4db49c]"
-                >
-                  +
-                </button>
-              </div>
-              <div className="flex items-center justify-center mt-6">
-                <button
-                  onClick={() => handleUpdateCart(cartData.cartId, 'decrease', 1)}
-                  className="flex items-center gap-2 px-4 py-2 border border-red-500 text-red-600 rounded-lg
-           hover:bg-red-500 hover:text-white transition-all duration-300 ease-in-out shadow-sm"
-                >
-                  🗑️
-                  <span className="font-medium text-sm">Remove from Cart</span>
-                </button>
-              </div>
-
-            ) : (
-              <button onClick={(e) => {
-                e.stopPropagation();
-                getUserId ?
-                  handleAddCart(product.id, quantity ? quantity : 1)
-                  handleAddCart(quantity ? quantity : 1)
-                  : setSignInModal(true);
-              }} className="bg-[#13cea1] hover:bg-[#4db49c] text-white font-semibold px-6 py-3 rounded-lg w-full">
-                Add to Cart
-                Buy now 
-              </button>
-            )} */}
-            {/* {!(isUploadDisabled) && (
-              <button onClick={(e) => {
-                e.stopPropagation();
-                getUserId ?
-                  handleAddCart(quantity ? quantity : 1)
-                  : setSignInModal(true);
-              }} className="bg-[#13cea1] flex  justify-center  hover:bg-[#4db49c] text-white font-semibold px-6 py-3 rounded-lg w-full">
-                Buy now <ShoppingCartIcon className="ml-2" />
-              </button>
-            )} */}
             {!cartData?.images?.length && (
               <button
                 disabled={!isAllOptionsSelected()}
@@ -996,10 +790,6 @@ ch-zoom"
                   </div>
                 </div>
               ) : null}
-
-              {/* UPLOAD BUTTON — only after cart created */}
-              {/* {productData?.data?.data?.is_custom_image_required === true && ( */}
-
               <button
                 onClick={() => {
                   const input = document.createElement("input");
@@ -1020,8 +810,6 @@ ch-zoom"
               </button>
             </>
           )}
-
-          {/* // )} */}
 
           {/* GO TO CART BUTTON — only after image upload */}
           {!uploading && cartData?.images?.length > 0 && (
