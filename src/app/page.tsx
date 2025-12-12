@@ -151,7 +151,7 @@ console.log(filteredBanners)
           ))}
         </div> */}
         <div className="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3">
-          {filteredBanners?.map((_, index) => (
+          {filteredBanners?.filter((img: any) => img?.is_offer === false)?.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
