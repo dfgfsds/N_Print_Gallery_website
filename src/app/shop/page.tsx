@@ -170,7 +170,7 @@ export default function Shop() {
                                 title={product?.name}
                                 price={product?.price}
                                 onAddToCart={() => alert(`Add to cart: ${product?.name}`)}
-                                onView={() => router.push(`/products/${slugConvert(product?.slug_name)}`)}
+                                onView={() => router.push(`/products/${(product?.slug_name)}`)}
                                 onWishlist={() => alert(`Wishlist: ${product?.name}`)}
                                 product={product}
                             />

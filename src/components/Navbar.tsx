@@ -76,6 +76,7 @@ export default function Navbar() {
       };
     }) || [];
 
+    console.log(menuItems, "menuItemsmenuItemsmenuItems");
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const openMenu = (i: any) => {
@@ -387,7 +388,7 @@ export default function Navbar() {
           >
             All products
           </Link>
-          {menuItems?.slice(0, 4)?.map((item: any, idx: number) => {
+          {menuItems?.slice(0, 5)?.map((item: any, idx: number) => {
             const hasProducts = item?.megaMenu?.some((col: any) => col.products?.length > 0);
             if (!hasProducts) return null;
 
