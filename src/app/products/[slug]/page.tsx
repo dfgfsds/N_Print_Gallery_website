@@ -588,6 +588,22 @@ ch-zoom"
                 <div className="border-b border-gray-300 mb-4"></div>
               </div>
 
+           <div className="mt-4 flex items-center justify-between w-full">
+                <label className="text-slate-600 font-bold w-1/3 text-md">Quantity</label>
+                <select
+                  className="border border-[#D9D9D9] rounded-md px-3 py-2 w-2/3 h-[45px]"
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                >
+                  <option value="" disabled>Select Quantity</option>
+
+                  {quantityOptions.map((q) => (
+                    <option key={q} value={q}>{q}</option>
+                  ))}
+                </select>
+
+              </div>
+
               {productData?.data?.data?.product?.options.map((opt: any) => (
                 <div
                   key={opt.id}
@@ -632,22 +648,6 @@ ch-zoom"
                 </div>
               ))}
 
-
-              <div className="mt-4 flex items-center justify-between w-full">
-                <label className="text-slate-600 font-bold w-1/3 text-md">Quantity</label>
-                <select
-                  className="border border-[#D9D9D9] rounded-md px-3 py-2 w-2/3 h-[45px]"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                >
-                  <option value="" disabled>Select Quantity</option>
-
-                  {quantityOptions.map((q) => (
-                    <option key={q} value={q}>{q}</option>
-                  ))}
-                </select>
-
-              </div>
             </div>
           ) : (
             /* 🔹 If NO options, show ONLY quantity nicely */
@@ -830,9 +830,9 @@ ch-zoom"
         )}
       </div>
       {/* <div className=" mx-auto px-6 bg-white py-2"> */}
-      <div className="mx-auto max-w-screen-xl w-full grid grid-cols-1 md:grid-cols-2 pt-10 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
-
-        <div className="mt-0 ">
+      {/* <div className="mx-auto max-w-screen-xl w-full grid grid-cols-1 md:grid-cols-2 pt-10 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white"> */}
+      <div className="mx-auto max-w-screen-xl w-full  pt-15 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
+        {/* <div className="mt-0 ">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Product Details:</h2>
           <ul className="list-disc list-inside space-y-2 text-gray-700">
             <li>SKU: {selectedVariant?.sku ? selectedVariant?.sku : selectedVariant?.product_variant_sku}</li>
@@ -840,12 +840,19 @@ ch-zoom"
             <li>Weight: {selectedVariant?.weight ? selectedVariant?.weight : selectedVariant?.product_variant_weight}kg</li>
             <li>Dimensions: {selectedVariant?.length ? selectedVariant?.length : selectedVariant?.product_variant_length} x {selectedVariant?.breadth ? selectedVariant?.breadth : selectedVariant?.product_variant_breadth} x {selectedVariant?.height ? selectedVariant?.height : selectedVariant?.product_variant_height} cm</li>
           </ul>
-        </div>
+        </div> */}
 
-        <div
+        {/* <div
           className="mt-2 text-gray-700 prose"
           dangerouslySetInnerHTML={{ __html: productData?.data?.data?.product?.description }}
+        /> */}
+          <h2 className="text-xl font-bold text-gray-800 my-4">Product Descriptions:</h2>
+
+        <div
+          className="mt-2 text-gray-700 overflow-hidden break-words break-all leading-relaxed whitespace-pre-wrap"
+          dangerouslySetInnerHTML={{ __html: productData?.data?.data?.product?.description }}
         />
+
       </div>
 
       {/* <div className=" mx-auto px-6 bg-white py-5"> */}
