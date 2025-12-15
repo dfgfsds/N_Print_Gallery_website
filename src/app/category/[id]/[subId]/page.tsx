@@ -96,7 +96,7 @@ const findSubCategoryProduct = products?.data?.products?.filter(
                         </div>
                     </div>
                 ) : (
-                    <p className="text-gray-600">No products found in this subcategory.</p>
+                    <p className="text-gray-600 text-center font-bold">No products found in this subcategory.</p>
                 )}
             </div>
 
