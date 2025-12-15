@@ -130,7 +130,7 @@ export default function SubCategory() {
                     {data?.subcategories?.length > 0 && (
                         <div>
                             <div className="text-center my-6">
-                                <h2 className="text-2xl text-gray-700 font-bold">{data?.name} Subcategories</h2>
+                                <h2 className="text-2xl text-gray-700 font-bold">{data?.name}</h2>
                                 <div className="w-20 h-1 bg-[#13cea1] mx-auto mt-2 rounded"></div>
                             </div>
 

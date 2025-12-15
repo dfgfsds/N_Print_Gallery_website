@@ -201,7 +201,7 @@ export default function LatestProducts() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
                   {finalProductData
                      ?.filter((product: any) => product?.is_featured === true)
-                    ?.slice(0, 4)
+                    ?.slice(0, 8)
                     ?.map((product: any, idx: number) => (
                       <ProductCard
                         key={idx}
