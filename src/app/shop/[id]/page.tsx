@@ -100,7 +100,7 @@ export default function CategoryProduct() {
                             <div
                                 key={idx}
                                 className=""
-                                onClick={() => router.push(`/products/${slugConvert(product?.name)}`)}
+                                onClick={() => router.push(`/products/${(product?.slug_name)}`)}
                             >
                                 <ProductCard
                                     image={product?.image_urls[0] || emptyImage}
@@ -108,7 +108,7 @@ export default function CategoryProduct() {
                                     title={product?.name}
                                     price={product?.price}
                                     onAddToCart={() => alert(`Add to cart: ${product?.name}`)}
-                                    onView={() => router.push(`/products/${slugConvert(product?.slug_name)}`)}
+                                    onView={() => router.push(`/products/${(product?.slug_name)}`)}
                                     onWishlist={() => alert(`Wishlist: ${product?.name}`)}
                                     product={product}
                                 />
@@ -181,7 +181,7 @@ export default function CategoryProduct() {
                                     title={product?.name}
                                     price={product?.price}
                                     onAddToCart={() => alert(`Add to cart: ${product?.name}`)}
-                                    onView={() => router.push(`/products/${slugConvert(product?.slug_name)}`)}
+                                    onView={() => router.push(`/products/${(product?.slug_name)}`)}
                                     onWishlist={() => alert(`Wishlist: ${product?.name}`)}
                                     product={product}
                                 />

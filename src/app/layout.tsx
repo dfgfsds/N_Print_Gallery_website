@@ -35,7 +35,7 @@ export default function RootLayout({
         suppressHydrationWarning={true}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      {/* <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}> */}
+        {/* <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}> */}
         <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="beforeInteractive" />
         <AppProviders>
           <Navbar />
@@ -43,10 +43,11 @@ export default function RootLayout({
             {children}
           </div>
           <Toaster position="top-right" />
+          <FloatingCallButton />
+          <FloatingWhatsApp />
           <Footer />
         </AppProviders>
-        {/* <FloatingCallButton /> */}
-        {/* <FloatingWhatsApp /> */}
+
       </body>
     </html>
   );

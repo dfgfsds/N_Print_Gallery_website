@@ -213,22 +213,28 @@ export default function ProductPage() {
 
   const handleUploadRef = async (images: File[]) => {
     try {
-      setUploading(true);
-      const formData = new FormData();
-      formData.append("cart_item", cartData?.cartItemId ?? "");
-      formData.append("created_by", "user");
-      formData.append("updated_by", "user");
-      images.forEach((file) => {
-        formData.append("images", file);
-      });
-      const response = await axios?.post(`${baseUrl}/cart-item-images/`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      if (response) {
-        queryClient.invalidateQueries(['getCartitemsData'] as InvalidateQueryFilters);
+      if (!cartData) {
+        toast.error('')
+      } else {
+        setUploading(true);
+        const formData = new FormData();
+        formData.append("cart_item", cartData?.cartItemId ?? "");
+        formData.append("created_by", "user");
+        formData.append("updated_by", "user");
+        images.forEach((file) => {
+          formData.append("images", file);
+        });
+        const response = await axios?.post(`${baseUrl}/cart-item-images/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        if (response) {
+          queryClient.invalidateQueries(['getCartitemsData'] as InvalidateQueryFilters);
+        }
       }
+
+
 
     } catch (error) {
       toast.error("Please add item to Cart!")
@@ -336,7 +342,7 @@ export default function ProductPage() {
             {/* DESKTOP ZOOM BOX */}
             {showLens && (
               <div
-                className="absolute top-0 left-[105%] w-[450px] h-[450px] border border-gray-300 bg-white shadow-xl rounded-md hidden md:block"
+                className="absolute top-0 left-[105%] w-[450px] h-[450px] border border-gray-300 bg-white shadow-xl rounded-md hidden md:block z-9999"
                 style={{
                   backgroundImage: `url(${images[activeIndex]})`,
                   backgroundSize: "200%",
@@ -528,6 +534,14 @@ ch-zoom"
     }
   }, []);
 
+  const [showAllPricing, setShowAllPricing] = useState(false);
+
+  const pricingData = selectedPrice?.quantity_pricing || [];
+  const visiblePricing = showAllPricing
+    ? pricingData
+    : pricingData.slice(0, 5);
+
+
   return (
     <>
       {/* <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 pt-10 pb-2 px-6 bg-white"> */}
@@ -588,7 +602,7 @@ ch-zoom"
                 <div className="border-b border-gray-300 mb-4"></div>
               </div>
 
-           <div className="mt-4 flex items-center justify-between w-full">
+              <div className="mb-5 flex items-center justify-between w-full">
                 <label className="text-slate-600 font-bold w-1/3 text-md">Quantity</label>
                 <select
                   className="border border-[#D9D9D9] rounded-md px-3 py-2 w-2/3 h-[45px]"
@@ -613,7 +627,7 @@ ch-zoom"
                   <label className="text-slate-600 font-bold w-1/3 text-md">{opt.option}</label>
 
 
-                  <div className="relative w-2/3">
+                  <div className=" w-2/3">
                     <select
                       className="w-full h-[45px] border border-[#D9D9D9] rounded-md pl-3 pr-10 text-gray-800
              focus:ring-1 focus:ring-blue-400 focus:border-blue-400 outline-none appearance-none"
@@ -641,9 +655,9 @@ ch-zoom"
                     </select>
 
 
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none">
+                    {/* <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none">
                       ▾
-                    </span>
+                    </span> */}
                   </div>
                 </div>
               ))}
@@ -670,14 +684,14 @@ ch-zoom"
             </div>
           )}
 
-          {selectedPrice?.quantity_pricing?.length > 0 && (
-            <table className="w-full border border-gray-300 mt-6 border-separate border-spacing-0">
+          {/* {selectedPrice?.quantity_pricing?.length > 0 && (
+            <table className="w-full border border-gray-300 mt-4 border-collapse">
               <thead>
                 <tr className="bg-[#fafafa]">
-                  <th className="p-4 text-center font-semibold text-gray-700 text-[16px] border border-gray-300">
+                  <th className="py-2 px-3 text-center font-semibold text-gray-700 text-[15px] border border-gray-300">
                     Quantity
                   </th>
-                  <th className="p-4 text-center font-semibold text-gray-700 text-[16px] border border-gray-300">
+                  <th className="py-2 px-3 text-center font-semibold text-gray-700 text-[15px] border border-gray-300">
                     Price
                   </th>
                 </tr>
@@ -685,31 +699,25 @@ ch-zoom"
 
               <tbody>
                 {selectedPrice?.quantity_pricing?.map((row: any, index: number) => (
-                  <tr
-                    key={index}
-                    className={`${index === 0 ? "font-bold" : "bg-white"}`}
-                  >
-                    {/* Quantity */}
+                  <tr key={index} className={index === 0 ? "font-semibold" : ""}>
                     <td
-                      className={`p-4 text-center text-[17px] border border-gray-300 ${index === 0 ? "font-extrabold text-black" : "text-gray-700"
+                      className={`py-2 px-3 text-center text-[16px] border border-gray-300 ${index === 0 ? "font-bold text-black" : "text-gray-700"
                         }`}
                     >
-                      {row.quantity}
+                      {row?.quantity}
                     </td>
-
-                    {/* Price */}
-                    <td className="p-2 border border-gray-300">
-                      <div className="font-bold text-[18px] text-black text-center">
+                    <td className="py-2 px-3 border border-gray-300 text-center">
+                      <div className="font-bold text-[16px] text-black leading-tight">
                         ₹{row?.price}
                       </div>
 
-                      <div className="text-[15px] text-gray-700 font-medium mt-1 text-center">
+                      <div className="text-[14px] text-gray-600 leading-tight">
                         ₹{row?.per_item_price}/unit
                       </div>
 
                       {row.discountPercent > 0 && (
-                        <div className="text-green-600 text-[14px] font-semibold mt-1 text-center">
-                          (Save {row.discountPercent}%)
+                        <div className="text-green-600 text-[13px] font-medium leading-tight">
+                          (Save {row?.discountPercent}%)
                         </div>
                       )}
                     </td>
@@ -717,13 +725,63 @@ ch-zoom"
                 ))}
               </tbody>
             </table>
+          )} */}
+
+          {pricingData.length > 0 && (
+            <>
+              <table className="w-full border border-gray-300 mt-4 border-collapse">
+                <thead>
+                  <tr className="bg-[#fafafa]">
+                    <th className="py-2 px-3 text-center font-semibold text-gray-700 text-[15px] border border-gray-300">
+                      Quantity
+                    </th>
+                    <th className="py-2 px-3 text-center font-semibold text-gray-700 text-[15px] border border-gray-300">
+                      Price
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {visiblePricing.map((row: any, index: number) => (
+                    <tr key={index}>
+                      <td className="py-2 px-3 text-center text-[16px] border border-gray-300 font-medium">
+                        {row.quantity}
+                      </td>
+
+                      <td className="py-2 px-3 border border-gray-300 text-center">
+                        <div className="font-bold text-[16px] text-black">
+                          ₹{row.price}
+                        </div>
+                        <div className="text-[14px] text-gray-600">
+                          ₹{row.per_item_price}/unit
+                        </div>
+
+                        {row.discountPercent > 0 && (
+                          <div className="text-green-600 text-[13px] font-medium">
+                            (Save {row.discountPercent}%)
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {pricingData.length > 5 && (
+                <div className="flex justify-center mt-3">
+                  <button
+                    onClick={() => setShowAllPricing(!showAllPricing)}
+                    className="text-sm font-semibold text-blue-600 hover:underline"
+                  >
+                    {showAllPricing ? "See less" : "See more"}
+                  </button>
+                </div>
+              )}
+            </>
           )}
 
-
-
-
-          {(selectedPrice?.final_price || productData?.data?.data?.product?.price) && (
-            <div className="mt-6 text-right  pt-2">
+          {/* {(selectedPrice?.final_price || productData?.data?.data?.product?.price) && (
+            <div className="mt-3 text-right  pt-2">
               <p className="text-lg font-semibold text-red-600">
                 Total: ₹
                 {selectedPrice?.final_price
@@ -735,6 +793,42 @@ ch-zoom"
                 <p className="text-sm text-gray-500 line-through">
                   ₹{selectedPrice.mrp_price.toFixed(2)}
                 </p>
+              )}
+            </div>
+          )} */}
+          
+          {(selectedPrice?.final_price || productData?.data?.data?.product?.price) && (
+            <div className="mt-3 text-right pt-2">
+
+              {/* PRICE */}
+              <p className="text-lg font-semibold text-red-600">
+                Total: ₹
+                {selectedPrice?.final_price
+                  ? selectedPrice.final_price.toFixed(2)
+                  : productData?.data?.data?.product?.price}
+              </p>
+
+              {/* ✅ GST INCLUDED TEXT – FROM DATA */}
+              {Number(productData?.data?.data?.product?.gst_percent) > 0 && (
+                <p className="text-xs text-gray-500">
+                  (Price inclusive of {productData.data.data.product.gst_percent}% GST)
+                </p>
+              )}
+
+              {/* MRP */}
+              {selectedPrice?.mrp_price > 0 && (
+                <>
+                  <p className="text-sm text-gray-500 line-through">
+                    ₹{selectedPrice.mrp_price.toFixed(2)}
+                  </p>
+
+                  {/* GST NOTE FOR MRP */}
+                  {productData?.data?.data?.product?.gst_percent && (
+                    <p className="text-xs text-gray-400">
+                      (MRP inclusive of GST)
+                    </p>
+                  )}
+                </>
               )}
             </div>
           )}
@@ -802,9 +896,9 @@ ch-zoom"
                   };
                   input.click();
                 }}
-                disabled={uploading || !cartData}
+                disabled={uploading}
                 className={`mt-3 w-full px-6 py-3 rounded-lg text-white bg-[#13cea1] hover:bg-[#4db49c]
-  ${uploading || !cartData ? "opacity-50 cursor-not-allowed" : ""}`}
+  ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
               >
                 {uploading ? "Uploading..." : "Upload Designs"}
               </button>
@@ -846,7 +940,7 @@ ch-zoom"
           className="mt-2 text-gray-700 prose"
           dangerouslySetInnerHTML={{ __html: productData?.data?.data?.product?.description }}
         /> */}
-          <h2 className="text-xl font-bold text-gray-800 my-4">Product Descriptions:</h2>
+        <h2 className="text-xl font-bold text-gray-800 my-4">Product Descriptions:</h2>
 
         <div
           className="mt-2 text-gray-700 overflow-hidden break-words break-all leading-relaxed whitespace-pre-wrap"
