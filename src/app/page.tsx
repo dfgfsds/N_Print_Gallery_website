@@ -29,18 +29,39 @@ const images = [
 export default function Home() {
   const [current, setCurrent] = useState(0);
   const [banners, setBanners] = useState<any[]>([]);
-  // const length = images.length;
-  // const length = banners?.length;
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
   const router = useRouter();
 
-
   // Filter banners based on type
-  const filteredBanners = banners.filter(banner =>
+  const filteredBanners = banners?.filter(banner =>
     isMobile ? banner.type === 'Mobile View' : banner.type === 'Web View'
   );
-console.log(filteredBanners)
-  const length = filteredBanners.length; // use filtered banners length
+
+  const visibleBanners = filteredBanners?.filter(
+    (img: any) => img?.is_offer === false
+  ) || [];
+
+  const length = visibleBanners.length;
+
+  useEffect(() => {
+    if (length <= 1) return;
+
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [length]);
+
+  const prevSlide = () => {
+    if (!length) return;
+    setCurrent((prev) => (prev === 0 ? length - 1 : prev - 1));
+  };
+
+  const nextSlide = () => {
+    if (!length) return;
+    setCurrent((prev) => (prev + 1) % length);
+  };
 
   // Auto slide
   useEffect(() => {
@@ -49,14 +70,6 @@ console.log(filteredBanners)
     }, 5000);
     return () => clearInterval(timer);
   }, [length]);
-
-  const prevSlide = () => {
-    setCurrent(current === 0 ? length - 1 : current - 1);
-  };
-
-  const nextSlide = () => {
-    setCurrent((current + 1) % length);
-  };
 
   const goToSlide = (index: number) => {
     setCurrent(index);
@@ -114,7 +127,7 @@ console.log(filteredBanners)
   };
 
   const handleBannerClick = (banner: any) => {
-    console.log('Banner clicked:', banner);
+    // console.log('Banner clicked:', banner);
     if (banner?.target_url) {
       router.push(banner.target_url); // Always open in same tab
     }
@@ -124,12 +137,12 @@ console.log(filteredBanners)
     <div>
       <div className="relative w-full">
         <div className="relative h-80 overflow-hidden  md:h-96">
-          {filteredBanners?.filter((img: any) => img?.is_offer === false)?.map((img, index) => (
+          {visibleBanners.map((img, index) => (
             <div
               key={index}
               className={`absolute top-0 left-0 w-full h-full transition-opacity duration-700 ${index === current ? "opacity-100" : "opacity-0"
                 }`}
-            onClick={() => handleBannerClick(img)}
+              onClick={() => handleBannerClick(img)}
             >
               <img
                 src={img.image_url}
@@ -139,28 +152,16 @@ console.log(filteredBanners)
             </div>
           ))}
         </div>
-
-        {/* <div className="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3">
-          {images.map((_, index) => (
+        <div className="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3">
+          {visibleBanners.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
               className={`w-2 md:w-3 h-2 md:h-3 rounded-full ${index === current ? "bg-white" : "bg-gray-400"
                 }`}
-            ></button>
-          ))}
-        </div> */}
-        <div className="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3">
-          {filteredBanners?.filter((img: any) => img?.is_offer === false)?.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-2 md:w-3 h-2 md:h-3 rounded-full ${index === current ? "bg-white" : "bg-gray-400"}`}
-            ></button>
+            />
           ))}
         </div>
-
-
         <button
           onClick={prevSlide}
           className="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer"
@@ -218,8 +219,8 @@ console.log(filteredBanners)
           ?.map((img: any, index: number) => (
             <div key={index}>
               <div
-            onClick={() => handleBannerClick(img)}
-              className="relative w-full h-[250px] md:h-[300px] rounded-lg overflow-hidden shadow-md">
+                onClick={() => handleBannerClick(img)}
+                className="relative w-full h-[250px] md:h-[300px] rounded-lg overflow-hidden shadow-md">
                 <Image
                   src={img?.image_url ? img.image_url : EmptyImage}
                   alt="Offer Banner 2"
@@ -230,17 +231,6 @@ console.log(filteredBanners)
               </div>
             </div>
           ))}
-
-        {/* <div className="relative w-full h-[250px] md:h-[300px] rounded-lg overflow-hidden shadow-md">
-          <Image
-            src={image2}
-            alt="Offer Banner 2"
-            fill
-            className="object-cover"
-            priority
-          />
-        </div> */}
-
       </div>
 
 
