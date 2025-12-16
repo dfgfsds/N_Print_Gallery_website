@@ -1,11 +1,7 @@
 "use client";
 
 import { ShoppingBag, ArrowRight } from 'lucide-react';
-// import { Button } from '@/components/ui/button';
-// import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
-// import CartItem from '@/components/cart/CartItem';
-// import CartSummary from '@/components/cart/CartSummary';
 import { useCartItem } from '@/context/CartItemContext';
 import { useProducts } from '@/context/ProductsContext';
 import CartItem from '@/components/cart/CartItem';
@@ -47,7 +43,6 @@ export default function CartPage() {
             cartItemData: item,
         };
     });
-console.log(matchingProductsArray)
 
     const totalAmount = matchingProductsArray?.reduce((acc: number, item: any) => {
         const price =
@@ -63,16 +58,6 @@ console.log(matchingProductsArray)
             <div className="container mx-auto px-4 py-12">
                 <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
                 {matchingProductsArray?.length === 0 ? (
-                    // <div className="flex flex-col items-center justify-center h-64">
-                    //   <ShoppingBag className="h-16 w-16 text-gray-400 mb-4" />
-                    //   <p className="text-gray-600">Your cart is empty</p>
-                    //   <Link href="/products" className="mt-4 text-[#4D8B31] hover:underline flex">
-                    //     Start Shopping 
-                    //     <ArrowRight className="ml-2 h-4 w-4 my-auto" />
-
-                    //   </Link>
-                    // </div>
-
                     <div className="flex flex-col items-center justify-center h-max  text-gray-800 animate-fadeIn">
                         <div className="text-6xl text-gray-400 animate-float">
                             <ShoppingBag className="h-16 w-16 text-[#4db49c] mb-4" />
