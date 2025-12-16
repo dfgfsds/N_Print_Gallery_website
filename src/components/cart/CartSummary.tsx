@@ -358,7 +358,7 @@ export default function CartSummary({ totalAmount }: any) {
                         </span>
                       )}
                     </p>
-                    <h3>{address?.address_type}</h3>
+                    <h3 className='capitalize font-bold'>{address?.address_type}</h3>
                     <p className="text-sm text-gray-500">
                       {address.email_address} | {address.contact_number}
                     </p>

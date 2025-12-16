@@ -44,16 +44,33 @@ export default function ProductPage() {
   const [selectedPrice, setSelectedPrice] = useState<any | null>(null);
   const [quantity, setQuantity] = useState<any | null>(0);
   const [prevQuantity, setPrevQuantity] = useState<any | null>(null);
-  console.log(selectedVariant?.is_custom_image_required)
-  const handleSelectOption = (optionId: number, value: any) => {
-    setSelectedOptions((prev) => ({
-      ...prev,
-      [optionId]: value,
-    }));
 
-    // 🔥 Reset cart data when option changes
+  // const handleSelectOption = (optionId: number, value: any) => {
+  //   setSelectedOptions((prev) => ({
+  //     ...prev,
+  //     [optionId]: value,
+  //   }));
+
+  //   setCartData(null);
+  // };
+
+  const handleSelectOption = (optionId: number, value: any) => {
+    setSelectedOptions((prev) => {
+      if (!value) {
+        const updated = { ...prev };
+        delete updated[optionId];
+        return updated;
+      }
+
+      return {
+        ...prev,
+        [optionId]: value,
+      };
+    });
+
     setCartData(null);
   };
+
 
   const isAllOptionsSelected = () => {
     const options = productData?.data?.data?.product?.options;
@@ -468,9 +485,9 @@ ch-zoom"
 
   useEffect(() => {
     const fetchOptionPrice = async () => {
-      if (!product?.id || quantity === undefined) return;
+      if (!product?.id) return;
 
-      let apiUrl = `${ApiUrls.getSingleProductWithOptionsPrice}?product=${product?.id}&quantity=${quantity || 1}`;
+      let apiUrl = `${ApiUrls.getSingleProductWithOptionsPrice}?product=${product?.id}&quantity=${quantity ? quantity : productData?.data?.data?.product?.min_purchase_quantity}`;
       Object.entries(selectedOptions || {}).forEach(([optionId, value]: any) => {
         if (value?.id) {
           apiUrl += `&optionId=${optionId}&valueId=${value.id}`;
@@ -494,30 +511,33 @@ ch-zoom"
   }, [quantity, JSON.stringify(selectedOptions), product?.id]);
 
 
-  const minQty: any = productData?.data?.data?.product?.min_purchase_quantity || 1;
-  const maxQty: any = productData?.data?.data?.product?.max_purchase_quantity || 50;
+  const minQty = Number(productData?.data?.data?.product?.min_purchase_quantity ? productData?.data?.data?.product?.min_purchase_quantity : 1);
+  const maxQty = Number(productData?.data?.data?.product?.max_purchase_quantity ? productData?.data?.data?.product?.max_purchase_quantity : 50);
 
   const generateQuantityOptions = (minQty: number, maxQty: number) => {
     const options: number[] = [];
 
-    // CASE 1: Min = 1 → Your special pattern
+    // CASE 1: minQty = 1 (special UX pattern)
     if (minQty === 1) {
-      const base = [1, 2, 3, 4, 5, 10, 15, 20];
-      base.forEach((b) => {
-        if (b <= maxQty) options.push(b);
+      const initialSteps = [1, 2, 3, 4, 5];
+
+      // first small numbers
+      initialSteps.forEach((val) => {
+        if (val <= maxQty) options.push(val);
       });
 
-      let val = 25;
-      while (val <= maxQty) {
-        options.push(val);
-        val += 5;
+      // after 5 → jump by 5
+      let current = 10;
+      while (current <= maxQty) {
+        options.push(current);
+        current += 5;
       }
 
       return options;
     }
 
+    // CASE 2: minQty > 1 → multiply pattern
     let current = minQty;
-
     while (current <= maxQty) {
       options.push(current);
       current += minQty;
@@ -532,7 +552,7 @@ ch-zoom"
     if (quantityOptions.length > 0) {
       setQuantity(quantityOptions[0]);
     }
-  }, []);
+  }, [quantityOptions.length]);
 
   const [showAllPricing, setShowAllPricing] = useState(false);
 
@@ -577,14 +597,14 @@ ch-zoom"
             {currentProduct?.isLike === true ? (
               <button
                 onClick={handleDeleteWishList}
-                className="w-10 h-10 md:w-12 md:h-12 bg-red-500 text-white border-[3px] border-white rounded-full flex items-center justify-center shadow hover:bg-red-500 hover:text-white transition-all duration-500 z-10"
+                className="w-10 h-10 md:w-12 md:h-12 bg-red-500 text-white border-[3px] border-white rounded-full flex items-center justify-center shadow hover:bg-red-500 hover:text-white transition-all duration-500 "
               >
                 <Heart size={20} />
               </button>
             ) : (
               <button
                 onClick={handleWishList}
-                className="w-10 h-10 md:w-12 md:h-12 bg-gray-200 border-[3px] border-white rounded-full flex items-center justify-center shadow hover:bg-red-500 hover:text-white transition-all duration-500 z-10"
+                className="w-10 h-10 md:w-12 md:h-12 bg-gray-200 border-[3px] border-white rounded-full flex items-center justify-center shadow hover:bg-red-500 hover:text-white transition-all duration-500 "
               >
                 <Heart size={20} />
               </button>
@@ -628,7 +648,7 @@ ch-zoom"
 
 
                   <div className=" w-2/3">
-                    <select
+                    {/* <select
                       className="w-full h-[45px] border border-[#D9D9D9] rounded-md pl-3 pr-10 text-gray-800
              focus:ring-1 focus:ring-blue-400 focus:border-blue-400 outline-none appearance-none"
                       onChange={(e) => {
@@ -644,9 +664,43 @@ ch-zoom"
                       }}
                       value={selectedOptions[opt.id]?.id || ""}
                     >
-                      <option value="" disabled>
-                        Select {opt.option}
+                      <option value="">
+                        Select {opt?.option}
                       </option>
+                      {opt.values.map((val: any) => (
+                        <option key={val.id} value={val.id}>
+                          {val.value}
+                        </option>
+                      ))}
+                    </select> */}
+
+                    <select
+                      className="w-full h-[45px] border border-[#D9D9D9] rounded-md pl-3 pr-10 text-gray-800
+  focus:ring-1 focus:ring-blue-400 focus:border-blue-400 outline-none appearance-none"
+                      value={selectedOptions[opt.id]?.id || ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+
+                        // 👉 EMPTY SELECT → CLEAR
+                        if (!value) {
+                          handleSelectOption(opt.id, null);
+                          return;
+                        }
+
+                        const selectedVal = opt.values.find(
+                          (v: any) => v.id === Number(value)
+                        );
+
+                        handleSelectOption(opt.id, {
+                          id: selectedVal.id,
+                          option_name: selectedVal.option_name,
+                          value: selectedVal.value,
+                          pricings: selectedVal.pricings,
+                        });
+                      }}
+                    >
+                      <option value="">Select {opt?.option}</option>
+
                       {opt.values.map((val: any) => (
                         <option key={val.id} value={val.id}>
                           {val.value}
@@ -727,7 +781,7 @@ ch-zoom"
             </table>
           )} */}
 
-          {pricingData.length > 0 && (
+          {pricingData?.length > 0 && (
             <>
               <table className="w-full border border-gray-300 mt-4 border-collapse">
                 <thead>
@@ -742,23 +796,23 @@ ch-zoom"
                 </thead>
 
                 <tbody>
-                  {visiblePricing.map((row: any, index: number) => (
+                  {visiblePricing?.map((row: any, index: number) => (
                     <tr key={index}>
                       <td className="py-2 px-3 text-center text-[16px] border border-gray-300 font-medium">
-                        {row.quantity}
+                        {row?.quantity}
                       </td>
 
                       <td className="py-2 px-3 border border-gray-300 text-center">
                         <div className="font-bold text-[16px] text-black">
-                          ₹{row.price}
+                          ₹{row?.price}
                         </div>
                         <div className="text-[14px] text-gray-600">
-                          ₹{row.per_item_price}/unit
+                          ₹{row?.per_item_price}/unit
                         </div>
 
-                        {row.discountPercent > 0 && (
+                        {row?.discountPercent > 0 && (
                           <div className="text-green-600 text-[13px] font-medium">
-                            (Save {row.discountPercent}%)
+                            (Save {row?.discountPercent}%)
                           </div>
                         )}
                       </td>
@@ -780,23 +834,6 @@ ch-zoom"
             </>
           )}
 
-          {/* {(selectedPrice?.final_price || productData?.data?.data?.product?.price) && (
-            <div className="mt-3 text-right  pt-2">
-              <p className="text-lg font-semibold text-red-600">
-                Total: ₹
-                {selectedPrice?.final_price
-                  ? selectedPrice.final_price.toFixed(2)
-                  : productData?.data?.data?.product?.price}
-              </p>
-
-              {selectedPrice?.mrp_price > 0 && (
-                <p className="text-sm text-gray-500 line-through">
-                  ₹{selectedPrice.mrp_price.toFixed(2)}
-                </p>
-              )}
-            </div>
-          )} */}
-          
           {(selectedPrice?.final_price || productData?.data?.data?.product?.price) && (
             <div className="mt-3 text-right pt-2">
 
@@ -847,7 +884,7 @@ ch-zoom"
                 }}
                 className={`flex justify-center font-semibold px-6 py-3 rounded-lg w-full transition
       ${!isAllOptionsSelected()
-                    ? "bg-[#13cea1]/50 text-white cursor-not-allowed"   // 🔹 lighter same color
+                    ? "bg-[#13cea1]/50 text-white cursor-not-allowed" 
                     : "bg-[#13cea1] hover:bg-[#4db49c] text-white cursor-pointer"
                   }
     `}

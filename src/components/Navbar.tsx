@@ -76,7 +76,6 @@ export default function Navbar() {
       };
     }) || [];
 
-    console.log(menuItems, "menuItemsmenuItemsmenuItems");
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const openMenu = (i: any) => {

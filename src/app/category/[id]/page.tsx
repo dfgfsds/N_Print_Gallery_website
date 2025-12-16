@@ -39,8 +39,6 @@ export default function SubCategory() {
         return product;
     });
 
-    console.log(products, filteredProducts)
-
     const finalProductData = matchingProductsArray?.map((item: any) => {
         const wishLists = wishList?.data?.find(
             (wish: any) => wish?.product === item?.id
@@ -64,7 +62,6 @@ export default function SubCategory() {
         );
     }
 
-    console.log(categoryProducts)
     return (
         <section className="w-full bg-white py-10">
              <div className="flex items-center mb-8">
