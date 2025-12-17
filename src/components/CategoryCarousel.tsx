@@ -5,6 +5,7 @@ import { useCategories } from "@/context/CategoriesContext";
 import { useRouter } from "next/navigation";
 import { useSwipeable } from "react-swipeable";
 import EmptyImage from "../../public/images/emptyImage.png";
+import axios from "axios";
 
 export default function FeaturedCategoriesCarousel() {
   const { categories } = useCategories();
@@ -45,6 +46,19 @@ export default function FeaturedCategoriesCarousel() {
 
   // dot indicator → based ONLY on real categories
   const activeDot = current % total;
+
+  //   const getTestAPi = async () => {
+  //   try {
+  //     const response = await axios.get("http://192.168.0.176");
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error("API error", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getTestAPi();
+  // }, []);
 
   return (
     <section className="w-full px-4 py-12">
