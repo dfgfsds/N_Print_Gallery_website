@@ -45,14 +45,6 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState<any | null>(0);
   const [prevQuantity, setPrevQuantity] = useState<any | null>(null);
 
-  // const handleSelectOption = (optionId: number, value: any) => {
-  //   setSelectedOptions((prev) => ({
-  //     ...prev,
-  //     [optionId]: value,
-  //   }));
-
-  //   setCartData(null);
-  // };
 
   const handleSelectOption = (optionId: number, value: any) => {
     setSelectedOptions((prev) => {
@@ -98,6 +90,7 @@ export default function ProductPage() {
         cartData?.options[optId]?.id === optValue?.id
     );
   };
+
 
   const isUploadDisabled =
     cartData &&
@@ -230,9 +223,11 @@ export default function ProductPage() {
 
   const handleUploadRef = async (images: File[]) => {
     try {
-      if (!cartData) {
-        toast.error('')
-      } else {
+      if (!cartData?.cartId) {
+        toast.error("Please select options and click Buy Now before uploading images");
+        return;
+      }
+      else {
         setUploading(true);
         const formData = new FormData();
         formData.append("cart_item", cartData?.cartItemId ?? "");
@@ -260,6 +255,9 @@ export default function ProductPage() {
     }
   };
 
+  const handleUploadError = () => {
+    toast.error("Please select options and click Buy Now before uploading images");
+  }
 
   const onRemoveImage = async (imageId: number, index: number) => {
     try {
@@ -648,32 +646,6 @@ ch-zoom"
 
 
                   <div className=" w-2/3">
-                    {/* <select
-                      className="w-full h-[45px] border border-[#D9D9D9] rounded-md pl-3 pr-10 text-gray-800
-             focus:ring-1 focus:ring-blue-400 focus:border-blue-400 outline-none appearance-none"
-                      onChange={(e) => {
-                        const selectedVal = opt.values.find(
-                          (v: any) => v.id === Number(e.target.value)
-                        );
-                        handleSelectOption(opt.id, {
-                          id: selectedVal.id,
-                          option_name: selectedVal.option_name,
-                          value: selectedVal.value,
-                          pricings: selectedVal.pricings,
-                        });
-                      }}
-                      value={selectedOptions[opt.id]?.id || ""}
-                    >
-                      <option value="">
-                        Select {opt?.option}
-                      </option>
-                      {opt.values.map((val: any) => (
-                        <option key={val.id} value={val.id}>
-                          {val.value}
-                        </option>
-                      ))}
-                    </select> */}
-
                     <select
                       className="w-full h-[45px] border border-[#D9D9D9] rounded-md pl-3 pr-10 text-gray-800
   focus:ring-1 focus:ring-blue-400 focus:border-blue-400 outline-none appearance-none"
@@ -737,49 +709,6 @@ ch-zoom"
               </div>
             </div>
           )}
-
-          {/* {selectedPrice?.quantity_pricing?.length > 0 && (
-            <table className="w-full border border-gray-300 mt-4 border-collapse">
-              <thead>
-                <tr className="bg-[#fafafa]">
-                  <th className="py-2 px-3 text-center font-semibold text-gray-700 text-[15px] border border-gray-300">
-                    Quantity
-                  </th>
-                  <th className="py-2 px-3 text-center font-semibold text-gray-700 text-[15px] border border-gray-300">
-                    Price
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {selectedPrice?.quantity_pricing?.map((row: any, index: number) => (
-                  <tr key={index} className={index === 0 ? "font-semibold" : ""}>
-                    <td
-                      className={`py-2 px-3 text-center text-[16px] border border-gray-300 ${index === 0 ? "font-bold text-black" : "text-gray-700"
-                        }`}
-                    >
-                      {row?.quantity}
-                    </td>
-                    <td className="py-2 px-3 border border-gray-300 text-center">
-                      <div className="font-bold text-[16px] text-black leading-tight">
-                        ₹{row?.price}
-                      </div>
-
-                      <div className="text-[14px] text-gray-600 leading-tight">
-                        ₹{row?.per_item_price}/unit
-                      </div>
-
-                      {row.discountPercent > 0 && (
-                        <div className="text-green-600 text-[13px] font-medium leading-tight">
-                          (Save {row?.discountPercent}%)
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )} */}
 
           {pricingData?.length > 0 && (
             <>
@@ -870,76 +799,89 @@ ch-zoom"
             </div>
           )}
 
+
+          {cartData?.images && cartData?.images?.length > 0 ? (
+            <>
+              {/* {selectedVariant?.is_custom_image_required === true && ( */}
+              <div className="mt-4">
+                <h3 className="text-sm font-medium text-gray-700 mb-2">Uploaded Images</h3>
+                <div className="flex gap-4 flex-wrap">
+                  {cartData?.images?.map((img: any) => (
+                    img?.image_urls?.map((url: any, index: number) => (
+                      <div key={`${img?.id}-${index}`} className="relative inline-block">
+                        <img
+                          src={url || emptyImage}
+                          alt="Uploaded"
+                          className="w-32 h-32 aspect-square object-cover rounded-lg border shadow"
+                        />
+                        <button
+                          onClick={() => onRemoveImage(img?.id, index)}
+                          className="absolute -top-2 -right-2 bg-red-600 text-white p-1 rounded-full shadow hover:bg-red-700"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    ))
+                  ))}
+                </div>
+              </div>
+              {/* // )} */}
+            </>
+          ) : null}
+
           <div className="mt-8">
             {!cartData?.images?.length && (
               <button
-                disabled={!isAllOptionsSelected()}
+                // disabled={isAllOptionsSelected()}
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (!isAllOptionsSelected()) return;
+                  // if (isAllOptionsSelected()) return;
 
                   getUserId
                     ? handleAddCart(quantity ? quantity : 1)
                     : setSignInModal(true);
                 }}
+                //             className={`flex justify-center font-semibold px-6 py-3 rounded-lg w-full transition
+                //   ${isAllOptionsSelected()
+                //                 ? "bg-[#13cea1]/50 text-white cursor-not-allowed"
+                //                 : "bg-[#13cea1] hover:bg-[#4db49c] text-white cursor-pointer"
+                //               }
+                // `}
                 className={`flex justify-center font-semibold px-6 py-3 rounded-lg w-full transition
-      ${!isAllOptionsSelected()
-                    ? "bg-[#13cea1]/50 text-white cursor-not-allowed" 
-                    : "bg-[#13cea1] hover:bg-[#4db49c] text-white cursor-pointer"
-                  }
+bg-[#13cea1] hover:bg-[#4db49c] text-white cursor-pointe"
     `}
               >
                 Buy now <ShoppingCartIcon className="ml-2" />
               </button>
             )}
-
           </div>
 
           {selectedVariant?.is_custom_image_required === true && (
-            <>
-              {cartData?.images && cartData?.images?.length > 0 ? (
-                <div className="mt-4">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Uploaded Images</h3>
-                  <div className="flex gap-4 flex-wrap">
-                    {cartData?.images?.map((img: any) => (
-                      img?.image_urls?.map((url: any, index: number) => (
-                        <div key={`${img?.id}-${index}`} className="relative inline-block">
-                          <img
-                            src={url || emptyImage}
-                            alt="Uploaded"
-                            className="w-32 h-32 aspect-square object-cover rounded-lg border shadow"
-                          />
-                          <button
-                            onClick={() => onRemoveImage(img?.id, index)}
-                            className="absolute -top-2 -right-2 bg-red-600 text-white p-1 rounded-full shadow hover:bg-red-700"
-                          >
-                            <X size={16} />
-                          </button>
-                        </div>
-                      ))
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-              <button
-                onClick={() => {
-                  const input = document.createElement("input");
-                  input.type = "file";
-                  input.multiple = true;
-                  input.accept = "image/*";
-                  input.onchange = (e: any) => {
-                    const files = Array.from(e.target.files);
-                    handleUploadRef(files as File[]);
-                  };
-                  input.click();
-                }}
-                disabled={uploading}
-                className={`mt-3 w-full px-6 py-3 rounded-lg text-white bg-[#13cea1] hover:bg-[#4db49c]
-  ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
-              >
-                {uploading ? "Uploading..." : "Upload Designs"}
-              </button>
-            </>
+            <button
+              type="button"
+              onClick={() => {
+                if (!cartData?.cartId) {
+                  handleUploadError();
+                  return;
+                }
+                const input = document.createElement("input");
+                input.type = "file";
+                input.multiple = true;
+                input.accept = "image/*";
+                input.onchange = (e: any) => {
+                  const files = Array.from(e.target.files || []);
+                  if (files.length === 0) return;
+
+                  handleUploadRef(files as File[]);
+                };
+                input.click();
+              }}
+              disabled={uploading}
+              className={`mt-3 w-full px-6 py-3 rounded-lg text-white bg-[#13cea1] hover:bg-[#4db49c]
+    ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
+            >
+              {uploading ? "Uploading..." : "Upload Designs"}
+            </button>
           )}
 
           {/* GO TO CART BUTTON — only after image upload */}
@@ -960,23 +902,8 @@ ch-zoom"
           <LoginModal open={signInmodal} handleClose={() => setSignInModal(false)} vendorId={vendorId} />
         )}
       </div>
-      {/* <div className=" mx-auto px-6 bg-white py-2"> */}
-      {/* <div className="mx-auto max-w-screen-xl w-full grid grid-cols-1 md:grid-cols-2 pt-10 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white"> */}
       <div className="mx-auto max-w-screen-xl w-full  pt-15 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
-        {/* <div className="mt-0 ">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Product Details:</h2>
-          <ul className="list-disc list-inside space-y-2 text-gray-700">
-            <li>SKU: {selectedVariant?.sku ? selectedVariant?.sku : selectedVariant?.product_variant_sku}</li>
-            <li>Category: {selectedVariant?.category_name}</li>
-            <li>Weight: {selectedVariant?.weight ? selectedVariant?.weight : selectedVariant?.product_variant_weight}kg</li>
-            <li>Dimensions: {selectedVariant?.length ? selectedVariant?.length : selectedVariant?.product_variant_length} x {selectedVariant?.breadth ? selectedVariant?.breadth : selectedVariant?.product_variant_breadth} x {selectedVariant?.height ? selectedVariant?.height : selectedVariant?.product_variant_height} cm</li>
-          </ul>
-        </div> */}
 
-        {/* <div
-          className="mt-2 text-gray-700 prose"
-          dangerouslySetInnerHTML={{ __html: productData?.data?.data?.product?.description }}
-        /> */}
         <h2 className="text-xl font-bold text-gray-800 my-4">Product Descriptions:</h2>
 
         <div
@@ -986,11 +913,8 @@ ch-zoom"
 
       </div>
 
-      {/* <div className=" mx-auto px-6 bg-white py-5"> */}
+
       <div className="mx-auto  pt-10 pb-2 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-32 bg-white">
-        {/* <h4 className="text-lg text-center font-bold mb-2 text-gray-600">
-          You May also Like
-        </h4> */}
         <div className="text-center my-8">
           <h2 className="text-2xl text-gray-700 font-bold">You May also Like</h2>
           <div className="w-20 h-1 bg-[#13cea1] mx-auto mt-2 rounded"></div>
