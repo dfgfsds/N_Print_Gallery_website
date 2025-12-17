@@ -387,57 +387,13 @@ export default function Navbar() {
           >
             All products
           </Link>
-          {menuItems?.slice(0, 5)?.map((item: any, idx: number) => {
+          {menuItems?.slice(0, 7)?.map((item: any, idx: number) => {
             const hasProducts = item?.megaMenu?.some((col: any) => col.products?.length > 0);
             if (!hasProducts) return null;
 
             const populatedMegaMenu = item?.megaMenu?.filter((col: any) => col.products?.length > 0);
 
             return (
-              // <div
-              //   key={idx}
-              //   className="relative inline-block"
-              //   onMouseEnter={() => openMenu(idx)}
-              //   onMouseLeave={() => closeMenuWithDelay()}
-              // >
-              //   <button className="flex items-center text-lg gap-1 font-medium cursor-pointer">
-              //     {item?.title}
-              //     <ChevronDown size={16} />
-              //   </button>
-              //   <div
-              //     className={`
-              //       absolute top-full mt-7 z-50 bg-white text-black shadow-lg p-3
-              //       transform origin-top transition-all duration-200 ease-in-out min-w-40
-              //       ${activeMenu === idx ? "scale-y-100 opacity-100 pointer-events-auto" : "scale-y-0 opacity-0 pointer-events-none"}
-              //     `}
-              //     style={{ left: '60%', transform: 'translateX(-50%)' }}
-              //   >
-              //     <div className={`grid grid-flow-col auto-cols-min gap-x-5`}>
-              //       {
-              //         populatedMegaMenu?.map((col: any, i: number) => (
-              //           <div key={i}>
-              //             {col?.heading && (
-              //               <h4 className="font-semibold mb-2 text-md whitespace-nowrap">{col.heading}</h4>
-              //             )}
-              //             {col.products?.length > 0 && (
-              //               <ul className="space-y-2 text-md text-slate-600">
-              //                 {col.products.map((link: any, j: number) => (
-              //                   <li key={j}>
-              //                     <Link
-              //                       href={`/products/${slugConvert(link?.name)}`}
-              //                       className="hover:text-[#4db49c]  transition whitespace-nowrap "
-              //                     >
-              //                       {link?.name}
-              //                     </Link>
-              //                   </li>
-              //                 ))}
-              //               </ul>
-              //             )}
-              //           </div>
-              //         ))}
-              //     </div>
-              //   </div>
-              // </div>
               <div
                 key={idx}
                 className="relative inline-block"
@@ -448,15 +404,29 @@ export default function Navbar() {
                   {item?.title}
                   <ChevronDown size={16} />
                 </button>
-                <div
+                {/* <div
                   className={`
       absolute top-full mt-7 z-40 bg-white text-black shadow-lg p-4 
       transform origin-top transition-all duration-200 ease-in-out min-w-40
       ${activeMenu === idx ? "scale-y-100 opacity-100 pointer-events-auto" : "scale-y-0 opacity-0 pointer-events-none"}
     `}
                   style={{ left: '0' }}
-                >
-                  <div className={`grid grid-flow-col auto-cols-min gap-x-10`}>
+                > */}
+                <div
+  className={`
+    absolute top-full mt-7 z-40 bg-white text-black shadow-lg p-4 
+    transform origin-top transition-all duration-200 ease-in-out
+    max-w-[95vw] overflow-x-auto
+    ${activeMenu === idx ? "scale-y-100 opacity-100 pointer-events-auto" : "scale-y-0 opacity-0 pointer-events-none"}
+  `}
+  style={{
+    left: "50%",
+    transform: "translateX(-50%)",
+  }}
+>
+<div className="grid grid-flow-col auto-cols-max gap-x-10">
+
+                  {/* <div className={`grid grid-flow-col auto-cols-min gap-x-10`}> */}
                     {populatedMegaMenu?.map((col: any, i: number) => (
                       <div key={i}>
                         {col?.heading && (
