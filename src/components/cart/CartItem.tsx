@@ -146,7 +146,7 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
             </div>
 
             {/* Product Image and Name */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 mt-5">
               {/* PRODUCT IMAGE */}
               <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
                 <img

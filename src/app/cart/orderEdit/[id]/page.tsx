@@ -46,7 +46,7 @@ export default function OrderEditIndex() {
     const currentItem = cartItems.find(
         (item: any) => Number(item?.id) === Number(params?.id)
     );
-console.log(currentItem)
+    console.log(currentItem)
     useEffect(() => {
         if (!currentItem) return;
 
@@ -535,13 +535,13 @@ ch-zoom"
     const quantityOptions = generateQuantityOptions(minQty, maxQty);
 
     useEffect(() => {
-        if(currentItem?.quantity){
-             setQuantity(currentItem?.quantity);
-        }else{
+        if (currentItem?.quantity) {
+            setQuantity(currentItem?.quantity);
+        } else {
             setQuantity(quantityOptions[0]);
 
         }
-    }, [quantityOptions.length,currentItem?.quantity]);
+    }, [quantityOptions.length, currentItem?.quantity]);
 
     const [showAllPricing, setShowAllPricing] = useState(false);
 
@@ -567,6 +567,8 @@ ch-zoom"
             };
             const updateApi = await updateCartitemApi(``, payload);
             if (updateApi) {
+                queryClient.invalidateQueries(['getProductData'] as InvalidateQueryFilters);
+                queryClient.invalidateQueries(['getCartitemsData'] as InvalidateQueryFilters);
                 router.push('/cart')
                 toast.success("Order updated successfully");
             }
@@ -574,8 +576,7 @@ ch-zoom"
             toast.error("Failed to update order");
         }
     };
-    console.log(selectedVariant?.is_custom_image_required)
-    console.log(cartData)
+
 
     return (
         <>
@@ -812,6 +813,7 @@ ch-zoom"
 
 
 
+
                     {selectedVariant?.is_custom_image_required === true && (
                         <>
                             {cartData?.images && cartData?.images?.length > 0 ? (
@@ -838,58 +840,60 @@ ch-zoom"
                                     </div>
                                 </div>
                             ) : null}
-
-                            <button
-                                // disabled={!isAllOptionsSelected()}
-                                onClick={() => {
-                                    if (!getUserId) {
-                                        setSignInModal(true);
-                                        return;
-                                    }
-
-                                    if (currentItem && hasOrderChanged()) {
-                                        handleUpdateOrder(); // 👈 update
-                                    } else {
-                                        handleUpdateOrder();
-                                    }
-                                }}
-                                className={`flex mt-3 justify-center font-semibold px-6 py-3 rounded-lg w-full transition
-    ${!isAllOptionsSelected()
-                                        ? "bg-[#13cea1]/50 cursor-not-allowed"
-                                        : "bg-[#13cea1] hover:bg-[#4db49c]"
-                                    } text-white`}
-                            >
-                                {currentItem && hasOrderChanged()
-                                    ? "Edit Order"
-                                    : "Edit Order"}
-                                <ShoppingCartIcon className="ml-2" />
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    // 🔥 CREATE INPUT
-                                    const input = document.createElement("input");
-                                    input.type = "file";
-                                    input.multiple = true;
-                                    input.accept = "image/*";
-
-                                    // 🔥 HANDLE FILE SELECTION
-                                    input.onchange = (e: any) => {
-                                        const files = Array.from(e.target.files || []);
-                                        if (files.length === 0) return;
-
-                                        handleUploadRef(files as File[]);
-                                    };
-                                    input.click();
-                                }}
-                                disabled={uploading}
-                                className={`mt-2 w-full px-6 py-3 rounded-lg text-white bg-[#13cea1] hover:bg-[#4db49c]
-    ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
-                            >
-                                {uploading ? "Uploading..." : "Upload Designs"}
-                            </button>
-
                         </>
+                    )}
+                    <button
+                        // disabled={!isAllOptionsSelected()}
+                        onClick={() => {
+                            if (!getUserId) {
+                                setSignInModal(true);
+                                return;
+                            }
+
+                            if (currentItem && hasOrderChanged()) {
+                                handleUpdateOrder(); // 👈 update
+                            } else {
+                                handleUpdateOrder();
+                            }
+                        }}
+                        //                             className={`flex mt-3 justify-center font-semibold px-6 py-3 rounded-lg w-full transition
+                        // ${!isAllOptionsSelected()
+                        //                                     ? "bg-[#13cea1]/50 cursor-not-allowed"
+                        //                                     : "bg-[#13cea1] hover:bg-[#4db49c]"
+                        //                                 } text-white`}
+                        className="flex mt-3 justify-center font-semibold px-6 py-3 rounded-lg w-full transition
+ bg-[#13cea1] hover:bg-[#4db49c] text-white"
+                    >
+                        {currentItem && hasOrderChanged()
+                            ? "Edit Order"
+                            : "Edit Order"}
+                        <ShoppingCartIcon className="ml-2" />
+                    </button>
+                    {selectedVariant?.is_custom_image_required === true && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                // 🔥 CREATE INPUT
+                                const input = document.createElement("input");
+                                input.type = "file";
+                                input.multiple = true;
+                                input.accept = "image/*";
+
+                                // 🔥 HANDLE FILE SELECTION
+                                input.onchange = (e: any) => {
+                                    const files = Array.from(e.target.files || []);
+                                    if (files.length === 0) return;
+
+                                    handleUploadRef(files as File[]);
+                                };
+                                input.click();
+                            }}
+                            disabled={uploading}
+                            className={`mt-2 w-full px-6 py-3 rounded-lg text-white bg-[#13cea1] hover:bg-[#4db49c]
+    ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
+                        >
+                            {uploading ? "Uploading..." : "Upload Designs"}
+                        </button>
                     )}
                 </div>
                 {signInmodal && (
