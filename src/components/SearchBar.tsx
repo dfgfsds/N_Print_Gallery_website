@@ -47,7 +47,7 @@ const QuickSearch: React.FC<Props> = ({ products, label = 'Search...', defaultOp
     useEffect(() => {
         if (!isOpen) return;
         const tid = setTimeout(() => {
-            if (query.trim().length > 2) {
+            if (query.trim().length > 0) {
                 fetchSearchResults(query.trim());
             } else {
                 setShowDropdown(false);
