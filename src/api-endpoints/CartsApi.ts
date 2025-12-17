@@ -65,8 +65,9 @@ export const postCartitemApi = async (query: any, payload: any) => {
 
 
 export const updateCartitemApi = async (query: any, payload: any) => {
+    const formattedQuery = query.endsWith('') ? query : `${query}`;
     return axios.post(
-        `${ApiUrls.CreateUpdateOptionProduct}${query}`, payload
+        `${ApiUrls.CreateUpdateOptionProduct}${formattedQuery}`, payload
     );
 };
 

@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { baseUrl } from '@/api-endpoints/ApiUrls';
 import EmptyImage from '../../../public/images/emptyImage.png';
+import { useRouter } from 'next/navigation';
 
 
 interface CartItemProps {
@@ -27,6 +28,7 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
   const queryClient = useQueryClient();
   const { convertPrice } = useCurrency();
   const emptyImage = EmptyImage;
+  const router = useRouter();
 
   const handleUpdateCart = async (id: any, type: any, qty: any) => {
     try {
@@ -111,7 +113,7 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
     };
     input.click();
   };
-
+  console.log(product)
   return (
     <div className="flex flex-col sm:flex-row gap-4 pb-6 border-b border-border last:border-0 last:pb-0">
       <div className="flex-grow">
@@ -128,7 +130,7 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
 
             <div className="absolute top-0 right-0 flex gap-4 text-sm font-semibold">
               <button
-                // onClick={() => handleEditOrder(product)}
+                onClick={() => router.push(`/cart/orderEdit/${product?.cartId}`)}
                 className="flex items-center gap-1 text-[#13cea1] font-bold hover:underline transition"
               >
                 <Pencil size={14} />
