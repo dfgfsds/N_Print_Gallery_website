@@ -58,7 +58,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
             product: id,
             user: getUserId,
             vendor: vendorId,
-            quantity: qty,
+            // quantity: qty,
+            quantity: product?.min_purchase_quantity ? product?.min_purchase_quantity :0,
             created_by: getUserName ? getUserName : 'user'
         }
         try {
@@ -127,7 +128,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     return (
         <>
             <div className="bg-white rounded-xl overflow-hidden shadow-lg relative group transition duration-300 ease-in-out hover:shadow-lg"
-            onClick={()=>onView()}
+                onClick={() => onView()}
             >
                 {/* Image Container */}
                 <div className="relative w-full aspect-[5/4] flex items-center justify-center bg-white">
@@ -201,7 +202,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     )}
                     
                     </div> */}
-                         {product?.cartId ? (
+                    {product?.cartId ? (
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
