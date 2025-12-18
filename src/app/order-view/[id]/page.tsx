@@ -160,7 +160,7 @@ function OrderSingleView() {
     return (
         <>
 
-            <div className="container mx-auto px-4 max-w-7xl mt-10">
+            <div className="container mx-auto px-4 max-w-7xl lg:mt-48 mt-24">
                 <button
                     onClick={() => {
                         router.back();
@@ -260,54 +260,103 @@ function OrderSingleView() {
                                 return (
                                     <div key={item.id} className="mb-6">
                                         {/* Product Card */}
-                                        <div className="flex gap-4 bg-white border border-gray-200 p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-                                            <Image
-                                                src={item?.product?.image_urls?.[0]}
-                                                className="h-24 w-24 object-cover rounded-lg border"
-                                                alt="product"
-                                                width={100}
-                                                height={100}
-                                            />
-                                            <div className="flex flex-col justify-between w-full">
-                                                <div>
-                                                    <h4
-                                                        onClick={() =>
-                                                            router.push(`/shop/${slugConvert(item?.product?.name)}`)
-                                                        }
-                                                        className="text-lg font-semibold text-gray-900 mb-1"
-                                                    >
-                                                        {item?.product?.name}
-                                                    </h4>
+                                        <div className="bg-white border border-gray-200 p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                                            <div className="flex gap-4 ">
+                                                <Image
+                                                    src={item?.product?.image_urls?.[0]}
+                                                    className="h-24 w-24 object-cover rounded-lg border"
+                                                    alt="product"
+                                                    width={100}
+                                                    height={100}
+                                                />
+                                                <div className="flex flex-col justify-between w-full">
+                                                    <div>
+                                                        <h4
+                                                            onClick={() =>
+                                                                router.push(`/shop/${slugConvert(item?.product?.name)}`)
+                                                            }
+                                                            className="text-lg font-semibold text-gray-900 mb-1 capitalize"
+                                                        >
+                                                            {item?.product?.name}
+                                                        </h4>
 
-                                                    {/* 🔹 Show Options if available */}
-                                                    {item?.options && Object.keys(item?.options)?.length > 0 && (
-                                                        <div className="text-sm text-gray-700 mb-2">
-                                                            {Object?.entries(item?.options).map(([key, value]: any, idx) => (
-                                                                <p key={idx} className="font-medium capitalize">
-                                                                    {key}: <span className="text-gray-900 font-semibold">{value}</span>
-                                                                </p>
-                                                            ))}
+                                                        {/* 🔹 Show Options if available */}
+                                                        {item?.options && Object.keys(item?.options)?.length > 0 && (
+                                                            <div className="text-sm text-gray-700 mb-2">
+                                                                {Object?.entries(item?.options).map(([key, value]: any, idx) => (
+                                                                    <p key={idx} className="font-medium capitalize">
+                                                                       <span className="text-sm text-gray-600 font-bold">{key}: </span>  <span className="text-gray-900 font-semibold">{value}</span>
+                                                                    </p>
+                                                                ))}
+                                                            </div>
+                                                        )}
+
+                                                        <div className="text-sm text-gray-600 space-y-1">
+                                                            <p className="font-bold">
+                                                                Qty:{" "}
+                                                                <span className="text-gray-800 font-medium">
+                                                                    {item?.quantity}
+                                                                </span>
+                                                            </p>
+                                                            <p className="font-bold">
+                                                                Price:{" "}
+                                                                <span className="text-gray-800 font-medium">
+                                                                    {convertPrice(Number(item?.price))}
+                                                                </span>
+                                                            </p>
                                                         </div>
-                                                    )}
-
-                                                    <div className="text-sm text-gray-600 space-y-1">
-                                                        <p className="font-bold">
-                                                            Qty:{" "}
-                                                            <span className="text-gray-800 font-medium">
-                                                                {item?.quantity}
-                                                            </span>
-                                                        </p>
-                                                        <p className="font-bold">
-                                                            Price:{" "}
-                                                            <span className="text-gray-800 font-medium">
-                                                                {convertPrice(Number(item?.price))}
-                                                            </span>
-                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
 
+                                            {item?.image_urls?.length > 0 && (
+                                                <div className="mt-3">
+                                                    <p className="text-sm font-bold mb-2">Customer Uploaded Image</p>
+
+                                                    <div className="relative w-16 h-16 group">
+                                                        <img
+                                                            src={item.image_urls[0]}
+                                                            className="w-16 h-16 rounded object-cover border"
+                                                            alt="Uploaded"
+                                                        />
+
+                                                        {/* Click Download (JavaScript method) */}
+                                                        <button
+                                                            type="button"
+                                                            onClick={async () => {
+                                                                try {
+                                                                    const response = await fetch(item.image_urls[0], { mode: "cors" });
+                                                                    const blob = await response.blob();
+                                                                    const link = document.createElement("a");
+                                                                    link.href = URL.createObjectURL(blob);
+                                                                    link.download = "customer-uploaded-image";
+                                                                    link.click();
+                                                                    URL.revokeObjectURL(link.href);
+                                                                } catch (error) {
+                                                                    console.error("Download failed:", error);
+                                                                }
+                                                            }}
+                                                            className="absolute inset-0 bg-black bg-opacity-60 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        >
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                className="h-6 w-6 text-white"
+                                                                fill="none"
+                                                                viewBox="0 0 24 24"
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    strokeWidth={2}
+                                                                    d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"
+                                                                />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
                                         {/* Show Review Actions only if delivered */}
                                         {data?.data?.status === "Delivered" && (
                                             matchedReviews?.length > 0 ? (
