@@ -108,7 +108,7 @@ export default function ProfileOrders() {
                       <div>
                         <button
                           className='rounded bg-[#13cea1] text-white font-bold px-4 py-2 hover:bg-[#4db49c] transition-colors'
-                          onClick={() => router.push(`/products/${slugConvert(product?.product?.name)}`)}
+                          onClick={() => router.push(`/products/${(product?.product?.slug_name)}`)}
                         >
                           Buy Again
                         </button>

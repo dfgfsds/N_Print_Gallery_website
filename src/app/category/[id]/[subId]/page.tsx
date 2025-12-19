@@ -17,9 +17,9 @@ export default function SubCategoryProducts() {
     const { wishList, wishListLoading }: any = useWishList();
     const { cartItem }: any = useCartItem();
 
-const findSubCategoryProduct = products?.data?.products?.filter(
-  (item: any) => item?.subcategory_name?.toLowerCase() === subId?.toLowerCase()
-);
+    const findSubCategoryProduct = products?.data?.products?.filter(
+        (item: any) => item?.subcategory_name?.toLowerCase() === subId?.toLowerCase()
+    );
 
 
     const filteredProducts = Array.isArray(findSubCategoryProduct) ? findSubCategoryProduct : [];
@@ -100,7 +100,7 @@ const findSubCategoryProduct = products?.data?.products?.filter(
                 )}
             </div>
 
-               <div className="w-full pt-12 mb-5 mx-auto px-4">
+            <div className="w-full pt-12 mb-5 mx-auto px-4">
                 {/* Header style different ah */}
                 <div className="text-center my-4">
                     <h2 className="text-2xl text-gray-700 font-bold">Featured Products</h2>

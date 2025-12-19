@@ -2,9 +2,6 @@
 
 import { useState } from 'react';
 import { X, Minus, Plus, TrashIcon, Trash2Icon, Upload, Pencil, Trash2 } from 'lucide-react';
-// import { Button } from '@/components/ui/button';
-// import { formatPrice } from '@/lib/utils';
-// import type { Product } from '@/lib/data';
 import { deleteCartitemsApi, updateCartitemsApi } from '@/api-endpoints/CartsApi';
 import { InvalidateQueryFilters, useQueryClient } from '@tanstack/react-query';
 import { formatPrice } from '../../../lib/utils';
@@ -50,6 +47,7 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
 
     }
   }
+
   const handleRemoveItem = async (id: any) => {
     try {
       const updateApi = await deleteCartitemsApi(`${id}`)
@@ -113,7 +111,19 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
     };
     input.click();
   };
-  console.log(product)
+
+  const gstPercent = Number(product?.gst_percent || 0);
+
+  const basePrice = Number(
+    product?.optionPrice
+      ? product?.optionPrice
+      : product?.product_size_price
+  );
+
+  const gstAmount = (basePrice * gstPercent) / 100;
+  const totalPriceWithGST = basePrice + gstAmount;
+
+
   return (
     <div className="flex flex-col sm:flex-row gap-4 pb-6 border-b border-border last:border-0 last:pb-0">
       <div className="flex-grow">
@@ -183,7 +193,7 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
                 )}
 
                 {/* PRICE */}
-                <p className="text-gray-500 text-sm mt-1">
+                {/* <p className="text-gray-500 text-sm mt-1">
                   Price:{" "}
                   {convertPrice(
                     Number(
@@ -192,7 +202,29 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
                         : product?.product_size_price
                     )
                   )}
-                </p>
+                </p> */}
+
+                <div className="text-sm mt-1">
+                  <p className="text-gray-500">
+                    Price:{" "}
+                    <span className="font-semibold text-gray-800">
+                      {convertPrice(basePrice)}
+                    </span>
+                  </p>
+
+                  {gstPercent > 0 && (
+                    <p className="text-gray-400 text-xs">
+                      + GST ({gstPercent}%)
+                    </p>
+                  )}
+
+                  {/* {gstPercent > 0 && (
+                    <p className="text-gray-700 font-semibold text-sm mt-0.5">
+                      Total: {convertPrice(totalPriceWithGST)}
+                    </p>
+                  )} */}
+                </div>
+
               </div>
             </div>
 
@@ -208,58 +240,61 @@ export default function CartItem({ product, quantity: initialQuantity }: CartIte
           <hr className="my-6 border-gray-200" />
 
           {/* Uploaded Images and Controls Section */}
-          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
-            <div className="flex-1">
-              <h4 className="font-semibold text-gray-700 mb-2">
-                Uploaded Designs ({product?.uploadImages?.image_urls?.length || 0})
-              </h4>
-              <div className="flex flex-wrap gap-3">
-                {product?.uploadImages?.image_urls?.length > 0 ? (
-                  product.uploadImages.image_urls.map((url: any, index: any) => (
-                    <div
-                      key={`${product.uploadImages.id}-${index}`}
-                      className="relative w-24 h-24 rounded-lg border shadow-sm group"
-                    >
-                      <img
-                        src={url || 'https://via.placeholder.com/100'}
-                        alt={`Uploaded Design ${index + 1}`}
-                        className="w-full h-full object-cover rounded-lg"
-                      />
-                      <button
-                        onClick={() => onRemoveImage(product.uploadImages.id, index)}
-                        className="absolute -top-2 -right-2 bg-red-600 text-white p-1 rounded-full shadow hover:bg-red-700 transition-transform duration-200 transform scale-100 hover:scale-110 opacity-0 group-hover:opacity-100"
+          {product?.is_custom_image_required === true && (
+            <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
+              <div className="flex-1">
+                <h4 className="font-semibold text-gray-700 mb-2">
+                  Uploaded Designs ({product?.uploadImages?.image_urls?.length || 0})
+                </h4>
+                <div className="flex flex-wrap gap-3">
+                  {product?.uploadImages?.image_urls?.length > 0 ? (
+                    product.uploadImages.image_urls.map((url: any, index: any) => (
+                      <div
+                        key={`${product.uploadImages.id}-${index}`}
+                        className="relative w-24 h-24 rounded-lg border shadow-sm group"
                       >
-                        <X size={16} />
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-gray-500 text-sm">No designs uploaded yet. Please upload your images.</p>
-                )}
+                        <img
+                          src={url || 'https://via.placeholder.com/100'}
+                          alt={`Uploaded Design ${index + 1}`}
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                        <button
+                          onClick={() => onRemoveImage(product.uploadImages.id, index)}
+                          className="absolute -top-2 -right-2 bg-red-600 text-white p-1 rounded-full shadow hover:bg-red-700 transition-transform duration-200 transform scale-100 hover:scale-110 opacity-0 group-hover:opacity-100"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500 text-sm">No designs uploaded yet. Please upload your images.</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex-shrink-0 mt-4 sm:mt-0">
+                <button
+                  onClick={handleUploadClick}
+                  disabled={uploading}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-lg text-white font-bold transition-colors duration-300 ${uploading ? "bg-gray-400 cursor-not-allowed" : "bg-teal-500 hover:bg-teal-600"
+                    }`}
+                >
+                  {uploading ? (
+                    <>
+                      <Upload size={18} />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload size={18} />
+                      Add/Upload Designs
+                    </>
+                  )}
+                </button>
               </div>
             </div>
+          )}
 
-            <div className="flex-shrink-0 mt-4 sm:mt-0">
-              <button
-                onClick={handleUploadClick}
-                disabled={uploading}
-                className={`flex items-center gap-2 px-6 py-3 rounded-lg text-white font-bold transition-colors duration-300 ${uploading ? "bg-gray-400 cursor-not-allowed" : "bg-teal-500 hover:bg-teal-600"
-                  }`}
-              >
-                {uploading ? (
-                  <>
-                    <Upload size={18} />
-                    Uploading...
-                  </>
-                ) : (
-                  <>
-                    <Upload size={18} />
-                    Add/Upload Designs
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
