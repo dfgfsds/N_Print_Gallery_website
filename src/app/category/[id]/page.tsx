@@ -64,27 +64,27 @@ export default function SubCategory() {
 
     return (
         <section className="w-full bg-white py-10">
-             <div className="flex items-center mb-8">
-                    <button
-                        onClick={() => router.back()}
-                        className="flex items-center gap-2 text-gray-700 hover:text-black"
-                    >
-                        <ArrowLeft size={20} />
-                        <span className="text-xl md:text-2xl font-bold text-gray-500">
-                            Back
-                        </span>
-                    </button>
-                    <span className="px-2">/</span>
-                    <h2 className="text-xl md:text-2xl font-bold text-[#13cea1]">{data?.name}</h2>
-                </div>
-                
+            <div className="flex items-center mb-8">
+                <button
+                    onClick={() => router.back()}
+                    className="flex items-center gap-2 text-gray-700 hover:text-black"
+                >
+                    <ArrowLeft size={20} />
+                    <span className="text-xl md:text-2xl font-bold text-gray-500">
+                        Back
+                    </span>
+                </button>
+                <span className="px-2">/</span>
+                <h2 className="text-xl md:text-2xl font-bold text-[#13cea1]">{data?.name}</h2>
+            </div>
+
             {/* <div className="text-center my-2">
                 <h2 className="text-2xl text-gray-700 font-bold">{data?.name}</h2>
                 <div className="w-20 h-1 bg-[#13cea1] mx-auto mt-2 rounded"></div>
             </div> */}
             <div className=" mx-auto px-4">
                 {/* Header */}
-               
+
 
 
                 {/* {data?.subcategories?.length > 0 ? (
@@ -138,11 +138,19 @@ export default function SubCategory() {
                                         onClick={() => router.push(`/category/${id}/${sub.slug_name}`)}
                                         className="relative w-full aspect-square rounded-lg overflow-hidden cursor-pointer group shadow-md hover:shadow-xl transition"
                                     >
+                                     {/* <div
+                                         key={sub.id}
+                                        onClick={() => router.push(`/category/${id}/${sub.slug_name}`)}
+                                        className="relative w-[800px] h-[800px] max-w-full mx-auto rounded-lg overflow-hidden cursor-pointer group shadow-md hover:shadow-xl transition"
+                                    > */}
+
 
                                         <img
                                             src={sub?.image}
                                             alt={sub?.name}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                            // className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+
                                         />
 
 

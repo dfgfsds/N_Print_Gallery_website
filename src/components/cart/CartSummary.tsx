@@ -206,6 +206,7 @@ export default function CartSummary({ totalAmount }: any) {
       setLoading(false);
     }
   };
+  
   const fetchCartAndDeliveryCharge = async () => {
     try {
       // 1. Fetch cart data
@@ -421,6 +422,20 @@ export default function CartSummary({ totalAmount }: any) {
                 )}
               </div>
             </div>
+
+            {getAppliedCouponData?.data?.data?.applied_coupons?.length ? (
+              <div className="space-y-4 font-bold !text-gray-600 mt-1">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground"> Discount Amount</span>
+                  <span>
+                    {convertPrice(
+                      Number(getAppliedCouponData?.data?.data?.applied_coupons[0]?.discount || 0)
+                    )}
+                  </span>
+                </div>
+              </div>
+            ) : ''}
+
             <div className="space-y-4 font-bold !text-gray-600 mt-1">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Total</span>
@@ -428,11 +443,11 @@ export default function CartSummary({ totalAmount }: any) {
                   {paymentValue === "cod"
                     ? convertPrice(
                       getCartCalculateTotalData?.data?.data?.data?.applied_coupons?.length > 0
-                        ? Number(getCartCalculateTotalData?.data?.data?.data?.final_price) + 
+                        ? Number(getCartCalculateTotalData?.data?.data?.data?.final_price) +
                         (
-                      Number(getPaymentDeliveryPartnerData?.data?.data[0]?.own_delivery_charge) +
-                      Number(getPaymentDeliveryPartnerData?.data?.data[0]?.own_cod_delivery_charge)
-                    )
+                          Number(getPaymentDeliveryPartnerData?.data?.data[0]?.own_delivery_charge) +
+                          Number(getPaymentDeliveryPartnerData?.data?.data[0]?.own_cod_delivery_charge)
+                        )
                         :
                         Number(totalAmount || 0) +
                         Number(getPaymentDeliveryPartnerData?.data?.data[0]?.own_delivery_charge || 0) +
@@ -460,6 +475,19 @@ export default function CartSummary({ totalAmount }: any) {
                       </div >
                     </div >
 
+                    {getAppliedCouponData?.data?.data?.applied_coupons?.length ? (
+                      <div className="space-y-4 font-bold !text-gray-600 mt-1">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground"> Discount Amount</span>
+                          <span>
+                            {convertPrice(
+                              Number(getAppliedCouponData?.data?.data?.applied_coupons[0]?.discount || 0)
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    ) : ''}
+
                     <div className="space-y-4 font-bold !text-gray-600 mt-1">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Total</span>
@@ -474,52 +502,6 @@ export default function CartSummary({ totalAmount }: any) {
 
         {/* final_delivery_charge */}
         <div className="mt-6 space-y-4">
-
-          {/* {getAppliedCouponData?.data?.data?.applied_coupons?.length ? (
-            <>
-              <div className="bg-green-50 p-4 rounded-lg space-y-2 flex justify-between">
-              <div className=''>
-                 <p className="text-sm text-green-700 font-bold mb-2">
-                  Applied Coupon: {getAppliedCouponData?.data?.data?.data[0]?.code}
-                </p>
-
-                <p className="text-sm text-green-700 font-bold">
-                  Discount Amount: ₹{getAppliedCouponData?.data?.data?.applied_coupons[0]?.discount || 0}
-                </p>
-              </div>
-              <button
-                onClick={handleRemoveCoupon}
-                className="text-red-600 border-red-300 hover:bg-red-50"
-              >
-                Remove Coupon
-              </button> 
-            </div>
-            </>
-          ) : (
-            <div>
-              <h2 className="text-lg font-semibold mb-1">Coupon</h2>
-              <div className="flex items-center gap-2 mb-2">
-                <input
-                  type="text"
-                  placeholder="Discount code"
-                  className="bg-white w-full p-2"
-                  value={code}
-                  onChange={(e: any) => setCode(e.target.value.toUpperCase())}
-                />
-                <button disabled={!code || isChecking} onClick={handleSubmit} className="whitespace-nowrap bg-red-600 p-2 rounded-md text-white font-bold hover:bg-red-600">
-                  
-                  {isChecking ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    'Apply'
-                  )}
-                </button>
-              </div>
-              {error && (
-                <p className="text-sm text-red-600">{error}</p>
-              )}
-            </div>
-          )} */}
 
           {getAppliedCouponData?.data?.data?.applied_coupons?.length ? (
             <>

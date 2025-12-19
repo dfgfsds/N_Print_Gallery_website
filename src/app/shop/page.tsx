@@ -131,6 +131,15 @@ export default function Shop() {
                                 />
                             </div>
 
+                            {/* <div className="w-[800px] h-[800px] max-w-full mx-auto overflow-hidden rounded-md shadow">
+                                <img
+                                    src={cat?.image ? cat?.image : emptyImage}
+                                    alt={cat?.name}
+                                    className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+                                />
+                            </div> */}
+
+
                             {/* Name below */}
                             <span className="block mt-3 text-center text-base md:text-lg font-semibold text-gray-800">
                                 {cat?.name}

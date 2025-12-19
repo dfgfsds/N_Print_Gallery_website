@@ -59,7 +59,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             user: getUserId,
             vendor: vendorId,
             // quantity: qty,
-            quantity: product?.min_purchase_quantity ? product?.min_purchase_quantity :0,
+            quantity: product?.min_purchase_quantity ? product?.min_purchase_quantity : 0,
             created_by: getUserName ? getUserName : 'user'
         }
         try {
@@ -139,6 +139,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     )}
 
                     <div className="relative w-full h-full overflow-hidden">
+                    {/* <div className="relative w-[800px] h-[800px] max-w-full overflow-hidden rounded-md"> */}
+
                         {/* Base Image */}
                         {image && (
                             <Image
@@ -150,6 +152,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
                             />
                         )}
 
+                        {/* {image && (
+                            <Image
+                                src={image ? image : EmptyImage}
+                                alt={title}
+                                width={800}
+                                height={800}
+                                className="object-cover w-full h-full transition-opacity duration-500 md:group-hover:opacity-0"
+                            />
+                        )} */}
+
+
                         {/* Hover Image */}
                         {hoverImage && (
                             <Image
@@ -160,6 +173,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
                                 className="object-cover w-full h-full absolute top-0 left-0 transform translate-x-full md:group-hover:translate-x-0 transition-transform duration-500 ease-in-out rounded-md"
                             />
                         )}
+
+                        {/* {hoverImage && (
+                            <Image
+                                src={hoverImage ? hoverImage : EmptyImage}
+                                alt={`${title} - hover`}
+                                width={800}
+                                height={800}
+                                className="object-cover w-full h-full absolute top-0 left-0 transform translate-x-full md:group-hover:translate-x-0 transition-transform duration-500 ease-in-out"
+                            />
+                        )} */}
+
                     </div>
 
 
@@ -263,7 +287,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
                 {/* Product Info */}
                 <div className="text-center px-6 py-6">
-                    <h3 className="text-gray-800 font-bold text-sm line-clamp-1 text-left">{title}</h3>
+                    <h3 className="text-gray-800 font-bold text-sm line-clamp-1 text-left capitalize">{title}</h3>
                     <div className='flex justify-between'>
                         <p className="text-[#13cea1] font-bold mt-1">{convertPrice(Number(price))}</p>
                         {/* <div className="flex items-center gap-1 text-yellow-500">

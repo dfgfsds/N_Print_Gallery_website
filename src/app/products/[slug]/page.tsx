@@ -325,7 +325,8 @@ export default function ProductPage() {
 
           {/* IMAGE */}
           <div
-            className="relative w-full max-w-md h-auto"
+            // className="relative w-full max-w-md h-auto"
+            className="relative w-[800px] h-[800px] max-w-full bg-white rounded-xl shadow-lg overflow-hidden"
             onMouseMove={handleMouseMove}
             onMouseEnter={() => window.innerWidth > 768 && setShowLens(true)}
             onMouseLeave={() => window.innerWidth > 768 && setShowLens(false)}
@@ -340,7 +341,8 @@ export default function ProductPage() {
             <img
               src={images[activeIndex] || emptyImage}
               alt={name}
-              className="max:w-full max:h-[1000px] object-contain rounded-xl shadow-lg"
+              // className="max:w-full max:h-[1000px] object-contain rounded-xl shadow-lg"
+              className="w-full h-full object-contain"
             />
 
             {/* DESKTOP LENS */}
@@ -512,19 +514,49 @@ ch-zoom"
   const minQty = Number(productData?.data?.data?.product?.min_purchase_quantity ? productData?.data?.data?.product?.min_purchase_quantity : 1);
   const maxQty = Number(productData?.data?.data?.product?.max_purchase_quantity ? productData?.data?.data?.product?.max_purchase_quantity : 50);
 
+  // const generateQuantityOptions = (minQty: number, maxQty: number) => {
+  //   const options: number[] = [];
+
+  //   // CASE 1: minQty = 1 (special UX pattern)
+  //   if (minQty === 1) {
+  //     const initialSteps = [1, 2, 3, 4, 5];
+
+  //     // first small numbers
+  //     initialSteps.forEach((val) => {
+  //       if (val <= maxQty) options.push(val);
+  //     });
+
+  //     // after 5 → jump by 5
+  //     let current = 10;
+  //     while (current <= maxQty) {
+  //       options.push(current);
+  //       current += 5;
+  //     }
+
+  //     return options;
+  //   }
+
+  //   // CASE 2: minQty > 1 → multiply pattern
+  //   let current = minQty;
+  //   while (current <= maxQty) {
+  //     options.push(current);
+  //     current += minQty;
+  //   }
+
+  //   return options;
+  // };
+
   const generateQuantityOptions = (minQty: number, maxQty: number) => {
     const options: number[] = [];
 
-    // CASE 1: minQty = 1 (special UX pattern)
+    // 🔹 CASE 1: Start = 1 (special UX)
     if (minQty === 1) {
-      const initialSteps = [1, 2, 3, 4, 5];
+      // 1 → 5
+      for (let i = 1; i <= 5 && i <= maxQty; i++) {
+        options.push(i);
+      }
 
-      // first small numbers
-      initialSteps.forEach((val) => {
-        if (val <= maxQty) options.push(val);
-      });
-
-      // after 5 → jump by 5
+      // after 5 → +5
       let current = 10;
       while (current <= maxQty) {
         options.push(current);
@@ -534,11 +566,24 @@ ch-zoom"
       return options;
     }
 
-    // CASE 2: minQty > 1 → multiply pattern
+    // 🔹 Determine step
+    let step: number;
+
+    if (minQty < 10) {
+      step = minQty;        // 2 → +2, 5 → +5
+    } else if (minQty < 50) {
+      step = 10;            // 10,20,30...
+    } else if (minQty < 100) {
+      step = 50;            // 50,100,150...
+    } else {
+      step = 100;           // 100,200,300...
+    }
+
+    // 🔹 Generate options
     let current = minQty;
     while (current <= maxQty) {
       options.push(current);
-      current += minQty;
+      current += step;
     }
 
     return options;
@@ -563,7 +608,7 @@ ch-zoom"
   return (
     <>
       {/* <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 pt-10 pb-2 px-6 bg-white"> */}
-      <div className="mx-auto max-w-screen-xl w-full grid grid-cols-1 md:grid-cols-2 pt-10 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
+      <div className="mx-auto max-w-screen-xl gap-10 w-full grid grid-cols-1 md:grid-cols-2 pt-10 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
 
         <div className="relative">
           <nav className="text-xs ml-20 sm:text-base font-semibold mb-6 text-gray-800 flex flex-wrap gap-1">
