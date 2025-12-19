@@ -276,6 +276,234 @@ export default function ProductPage() {
     return <p>Loading products...</p>;
   }
 
+  // function ProductImageGallery({ images = [], name }: any) {
+  //   const emptyImage = "/no-image.png";
+
+  //   const [activeIndex, setActiveIndex] = useState(0);
+  //   const [showLens, setShowLens] = useState(false);
+  //   const [lensPos, setLensPos] = useState({ x: 0, y: 0 });
+  //   const [bgPos, setBgPos] = useState("50% 50%");
+  //   const [mobileZoom, setMobileZoom] = useState(false);
+
+  //   const handlePrev = () => {
+  //     setActiveIndex((p) => (p === 0 ? images.length - 1 : p - 1));
+  //   };
+
+  //   const handleNext = () => {
+  //     setActiveIndex((p) => (p === images.length - 1 ? 0 : p + 1));
+  //   };
+
+  //   // AUTO SLIDE (optional)
+  //   useEffect(() => {
+  //     if (images.length > 1) {
+  //       const timer = setInterval(handleNext, 5000);
+  //       return () => clearInterval(timer);
+  //     }
+  //   }, [images.length]);
+
+  //   // 🔍 MAGNIFIER LOGIC
+  //   const handleMouseMove = (e: any) => {
+  //     if (window.innerWidth < 768) return;
+
+  //     const rect = e.currentTarget.getBoundingClientRect();
+
+  //     let x = e.clientX - rect.left;
+  //     let y = e.clientY - rect.top;
+
+  //     x = Math.max(0, Math.min(x, rect.width));
+  //     y = Math.max(0, Math.min(y, rect.height));
+
+  //     setLensPos({ x, y });
+
+  //     const xPercent = (x / rect.width) * 100;
+  //     const yPercent = (y / rect.height) * 100;
+
+  //     setBgPos(`${xPercent}% ${yPercent}%`);
+  //   };
+
+  //   return (
+  //     <>
+  //       <div className="sticky top-0 flex flex-col items-center gap-4">
+
+  //         {/* MAIN IMAGE */}
+  //         <div
+  //           className="relative w-[800px] h-[800px] max-w-full
+  //                    bg-white rounded-xl shadow-lg overflow-hidden"
+  //           onMouseMove={handleMouseMove}
+  //           onMouseEnter={() => window.innerWidth >= 768 && setShowLens(true)}
+  //           onMouseLeave={() => setShowLens(false)}
+  //           onClick={() => window.innerWidth < 768 && setMobileZoom(true)}
+  //         >
+  //           {/* IMAGE (FORCE COVER – NO WHITE SPACE) */}
+  //           <div className="relative w-full h-full overflow-hidden">
+  //             <img
+  //               src={images[activeIndex] || emptyImage}
+  //               alt={name}
+  //               className="absolute inset-0 w-full h-full object-cover"
+  //             />
+  //           </div>
+
+  //           {/* LENS */}
+  //           {showLens && (
+  //             <div
+  //               className="absolute w-32 h-32 border border-gray-400
+  //                        bg-white/30 pointer-events-none"
+  //               style={{
+  //                 left: lensPos.x - 64,
+  //                 top: lensPos.y - 64,
+  //               }}
+  //             />
+  //           )}
+
+  //           {/* ZOOM BOX */}
+  //           {showLens && (
+  //             <div
+  //               className="absolute top-0 left-[105%] w-[450px] h-[450px]
+  //                        border border-gray-300 rounded-lg shadow-xl
+  //                        hidden md:block bg-no-repeat bg-white"
+  //               style={{
+  //                 backgroundImage: `url(${images[activeIndex] || emptyImage})`,
+  //                 backgroundSize: "300%",
+  //                 backgroundPosition: bgPos,
+  //               }}
+  //             />
+  //           )}
+
+  //           {/* NAV BUTTONS */}
+  //           <button
+  //             onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+  //             className="absolute left-3 top-1/2 -translate-y-1/2
+  //                      bg-white/70 p-2 rounded-full shadow"
+  //           >
+  //             <ChevronLeft />
+  //           </button>
+
+  //           <button
+  //             onClick={(e) => { e.stopPropagation(); handleNext(); }}
+  //             className="absolute right-3 top-1/2 -translate-y-1/2
+  //                      bg-white/70 p-2 rounded-full shadow"
+  //           >
+  //             <ChevronRight />
+  //           </button>
+  //         </div>
+
+  //         {/* THUMBNAILS */}
+  //         <div className="flex gap-2 overflow-x-auto">
+  //           {images.map((img: any, idx: number) => (
+  //             <button
+  //               key={idx}
+  //               onClick={() => setActiveIndex(idx)}
+  //               className={`border-2 rounded-md
+  //               ${activeIndex === idx ? "border-blue-500" : "border-transparent"}
+  //             `}
+  //             >
+  //               <img
+  //                 src={img || emptyImage}
+  //                 alt={`thumb-${idx}`}
+  //                 className="w-20 h-20 object-cover rounded"
+  //               />
+  //             </button>
+  //           ))}
+  //         </div>
+  //       </div>
+
+  //       {/* MOBILE FULLSCREEN ZOOM */}
+  //       {mobileZoom && (
+  //         <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
+  //           <button
+  //             onClick={() => setMobileZoom(false)}
+  //             className="absolute top-5 right-5 text-white text-3xl"
+  //           >
+  //             ✕
+  //           </button>
+  //           <img
+  //             src={images[activeIndex] || emptyImage}
+  //             className="w-full h-full object-contain"
+  //           />
+  //         </div>
+  //       )}
+  //     </>
+  //   );
+  // }
+
+  // function ProductImageGallery({ images = [], name }: any) {
+  //   const emptyImage = "/no-image.png";
+  //   const ZOOM = 3;
+
+  //   if (!images || images.length === 0) {
+  //     return (
+  //       <div className="w-[800px] aspect-square bg-gray-100 rounded-xl flex items-center justify-center">
+  //         No image
+  //       </div>
+  //     );
+  //   }
+
+  //   const [activeIndex, setActiveIndex] = useState(0);
+  //   const [showLens, setShowLens] = useState(false);
+  //   const [lensPos, setLensPos] = useState({ x: 0, y: 0 });
+  //   const [bgPos, setBgPos] = useState("50% 50%");
+
+  //   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  //     if (window.innerWidth < 1024) return;
+
+  //     const rect = e.currentTarget.getBoundingClientRect();
+  //     const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+  //     const y = Math.max(0, Math.min(e.clientY - rect.top, rect.height));
+
+  //     setLensPos({ x, y });
+  //     setBgPos(`${(x / rect.width) * 100}% ${(y / rect.height) * 100}%`);
+  //   };
+
+  //   return (
+  //     <div className="relative overflow-visible">
+
+  //       {/* MAIN IMAGE */}
+  //       <div
+  //         className="relative w-[800px] aspect-square bg-white rounded-xl shadow-lg overflow-hidden"
+  //         onMouseMove={handleMouseMove}
+  //         onMouseEnter={() => window.innerWidth >= 1024 && setShowLens(true)}
+  //         onMouseLeave={() => setShowLens(false)}
+  //       >
+  //         <img
+  //           src={images[activeIndex] ?? emptyImage}
+  //           alt={name}
+  //           className="w-full h-full object-contain"
+  //         />
+
+  //         {showLens && (
+  //           <div
+  //             className="absolute w-32 h-32 bg-white/30 border border-gray-400 pointer-events-none"
+  //             style={{
+  //               left: lensPos.x - 64,
+  //               top: lensPos.y - 64,
+  //             }}
+  //           />
+  //         )}
+  //       </div>
+
+  //       {/* ZOOM BOX */}
+  //       {showLens && (
+  //         <div
+  //           className="absolute top-0 translate-x-[820px]
+  //                      w-[440px] h-[440px]
+  //                      border border-gray-300 rounded-lg
+  //                      shadow-xl bg-white hidden lg:block z-50"
+  //           style={{
+  //             backgroundImage: `url(${images[activeIndex] ?? emptyImage})`,
+  //             backgroundRepeat: "no-repeat",
+  //             backgroundSize: `${ZOOM * 100}%`,
+  //             backgroundPosition: bgPos,
+  //           }}
+  //         />
+  //       )}
+  //     </div>
+  //   );
+  // }
+
+  const LENS_SIZE = 128;
+  const ZOOM = 2;
+
+
   function ProductImageGallery({ images, name }: any) {
     const [activeIndex, setActiveIndex] = useState(0);
     const emptyImage = "/no-image.png";
@@ -302,7 +530,7 @@ export default function ProductPage() {
       }
     }, [images?.length]);
 
-    // ⭐ MOUSE DESKTOP ZOOM
+     // ⭐ MOUSE DESKTOP ZOOM
     const handleMouseMove = (e: any) => {
       if (window.innerWidth < 768) return; // ⛔ MOBILE → dont run hover zoom
 
@@ -319,30 +547,23 @@ export default function ProductPage() {
       setBgPos(`${xPercent}% ${yPercent}%`);
     };
 
+
     return (
       <>
         <div className="sticky top-0 flex flex-col items-center space-y-4">
 
           {/* IMAGE */}
           <div
-            // className="relative w-full max-w-md h-auto"
-            className="relative w-[800px] h-[800px] max-w-full bg-white rounded-xl shadow-lg overflow-hidden"
+            className="relative w-[600px] h-[600px]"
             onMouseMove={handleMouseMove}
             onMouseEnter={() => window.innerWidth > 768 && setShowLens(true)}
             onMouseLeave={() => window.innerWidth > 768 && setShowLens(false)}
             onClick={() => window.innerWidth < 768 && setMobileZoom(true)} // ⭐ MOBILE TAP TO ZOOM
           >
-            {/* <img
-              src={images[activeIndex] || emptyImage}
-              alt={name}
-              className="w-full h-auto object-contain rounded-xl shadow-lg"
-            /> */}
-
             <img
               src={images[activeIndex] || emptyImage}
               alt={name}
-              // className="max:w-full max:h-[1000px] object-contain rounded-xl shadow-lg"
-              className="w-full h-full object-contain"
+              className="w-full h-auto object-contain rounded-xl shadow-lg"
             />
 
             {/* DESKTOP LENS */}
@@ -357,9 +578,9 @@ export default function ProductPage() {
             )}
 
             {/* DESKTOP ZOOM BOX */}
-            {showLens && (
+             {showLens && (
               <div
-                className="absolute top-0 left-[105%] w-[450px] h-[450px] border border-gray-300 bg-white shadow-xl rounded-md hidden md:block z-9999"
+                className="absolute top-0 left-[105%] w-[450px] h-[450px] border border-gray-300 bg-white shadow-xl rounded-md hidden md:block"
                 style={{
                   backgroundImage: `url(${images[activeIndex]})`,
                   backgroundSize: "200%",
@@ -367,6 +588,8 @@ export default function ProductPage() {
                 }}
               ></div>
             )}
+
+
 
             {/* Prev */}
             <button
@@ -425,7 +648,6 @@ ch-zoom"
       </>
     );
   }
-
 
 
   const finalProductData = products?.data?.products?.map((item: any) => {
@@ -608,7 +830,7 @@ ch-zoom"
   return (
     <>
       {/* <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 pt-10 pb-2 px-6 bg-white"> */}
-      <div className="mx-auto max-w-screen-xl gap-10 w-full grid grid-cols-1 md:grid-cols-2 pt-10 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
+      <div className="max-w-screen-xl mx-auto  gap-16 w-full grid grid-cols-1 md:grid-cols-2 pt-10 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
 
         <div className="relative">
           <nav className="text-xs ml-20 sm:text-base font-semibold mb-6 text-gray-800 flex flex-wrap gap-1">
@@ -853,7 +1075,7 @@ ch-zoom"
                 <div className="flex gap-4 flex-wrap">
                   {cartData?.images?.map((img: any) => (
                     img?.image_urls?.map((url: any, index: number) => (
-                      <div key={`${img?.id}-${index}`} className="relative inline-block">
+                      <div key={`${img?.id}-${index}`} className=" inline-block">
                         <img
                           src={url || emptyImage}
                           alt="Uploaded"
@@ -947,7 +1169,7 @@ bg-[#13cea1] hover:bg-[#4db49c] text-white cursor-pointe"
           <LoginModal open={signInmodal} handleClose={() => setSignInModal(false)} vendorId={vendorId} />
         )}
       </div>
-      <div className="mx-auto max-w-screen-xl w-full  pt-15 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
+      <div className="mx-auto container w-full  pt-15 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
 
         <h2 className="text-xl font-bold text-gray-800 my-4">Product Descriptions:</h2>
 
@@ -959,7 +1181,7 @@ bg-[#13cea1] hover:bg-[#4db49c] text-white cursor-pointe"
       </div>
 
 
-      <div className="mx-auto  pt-10 pb-2 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-32 bg-white">
+      <div className="mx-auto  pt-10 pb-2 container px-4 sm:px-8 md:px-12 lg:px-20 xl:px-32 bg-white">
         <div className="text-center my-8">
           <h2 className="text-2xl text-gray-700 font-bold">You May also Like</h2>
           <div className="w-20 h-1 bg-[#13cea1] mx-auto mt-2 rounded"></div>

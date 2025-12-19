@@ -120,9 +120,6 @@ export default function SubCategory() {
                     <p className="text-gray-600">No subcategories found.</p>
                 )} */}
 
-                <div className="mx-auto px-4">
-
-
                     {/* 💙 Subcategories Below (If Available) */}
                     {data?.subcategories?.length > 0 && (
                         <div>
@@ -131,7 +128,9 @@ export default function SubCategory() {
                                 <div className="w-20 h-1 bg-[#13cea1] mx-auto mt-2 rounded"></div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"> */}
+          <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+
                                 {data.subcategories.map((sub: any) => (
                                     <div
                                         key={sub.id}
@@ -179,7 +178,9 @@ export default function SubCategory() {
                                 <div className="w-20 h-1 bg-[#13cea1] mx-auto mt-2 rounded"></div>
                             </div>
 
-                            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            {/* <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4"> */}
+          <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                               
                                 {/* {categoryProducts.map((product: any, idx: number) => ( */}
                                 {categoryProducts
                                     .filter((product: any) => !product?.subcategory || product?.subcategory === "") // ⛔ subcategory iruntha skip
@@ -205,19 +206,18 @@ export default function SubCategory() {
                         <p className="text-gray-600 text-center py-16 text-lg">No products found in this category.</p>
                     )}
 
-                </div>
-
             </div>
 
 
-            <div className="w-full pt-12 mb-5 mx-auto px-4">
+            <div className=" mx-auto px-4">
                 {/* Header style different ah */}
                 <div className="text-center my-4">
                     <h2 className="text-2xl text-gray-700 font-bold">Featured Products</h2>
                     <div className="w-20 h-1 bg-[#13cea1] mx-auto mt-2 rounded"></div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4"> */}
+          <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     {finalProductData
                         ?.filter((product: any) => product?.is_featured === true)
                         ?.slice(0, 8)
