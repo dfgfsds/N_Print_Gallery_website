@@ -198,7 +198,7 @@ export default function LatestProducts() {
             </div>
           ))}
         </div> */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                   {finalProductData
                      ?.filter((product: any) => product?.is_featured === true)
                     ?.slice(0, 8)
