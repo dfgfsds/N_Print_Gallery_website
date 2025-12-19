@@ -1169,7 +1169,7 @@ bg-[#13cea1] hover:bg-[#4db49c] text-white cursor-pointe"
           <LoginModal open={signInmodal} handleClose={() => setSignInModal(false)} vendorId={vendorId} />
         )}
       </div>
-      <div className="mx-auto container w-full  pt-15 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
+      <div className="mx-auto max-w-screen-xl w-full  pt-15 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
 
         <h2 className="text-xl font-bold text-gray-800 my-4">Product Descriptions:</h2>
 
@@ -1181,7 +1181,7 @@ bg-[#13cea1] hover:bg-[#4db49c] text-white cursor-pointe"
       </div>
 
 
-      <div className="mx-auto  pt-10 pb-2 container px-4 sm:px-8 md:px-12 lg:px-20 xl:px-32 bg-white">
+      <div className="mx-auto  pt-10 pb-2 max-w-screen-xl px-4 sm:px-8 md:px-12 lg:px-20 xl:px-32 bg-white">
         <div className="text-center my-8">
           <h2 className="text-2xl text-gray-700 font-bold">You May also Like</h2>
           <div className="w-20 h-1 bg-[#13cea1] mx-auto mt-2 rounded"></div>
