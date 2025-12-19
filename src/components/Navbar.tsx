@@ -43,39 +43,40 @@ export default function Navbar() {
 
   const menuItems =
     categories?.data
-      ?.filter((cat: any) => cat.is_featured === true)
-    ?.map((cat: any) => {
-      // all products in this category
-      const categoryProducts = products?.data?.products?.filter(
-        (p: any) => p.category === cat.id 
-      );
+      ?.filter((cat: any) => cat?.is_featured === true)
+      ?.map((cat: any) => {
+        // all products in this category
+        const categoryProducts = products?.data?.products?.filter(
+          (p: any) => p.category === cat.id
+        );
 
-      // if category has subcategories
-      const megaMenu =
-        cat.subcategories?.length > 0
-          ? cat.subcategories.map((sub: any) => {
-            const subProducts = categoryProducts?.filter(
-              (p: any) => p.subcategory === sub.id
-            );
-            return {
-              heading: sub.name,
-              products: subProducts || [],
-            };
-          })
-          : [
-            // no subcategories → attach products directly
-            {
-              heading: cat.name,
-              products: categoryProducts || [],
-            },
-          ];
+        // if category has subcategories
+        const megaMenu =
+          cat.subcategories?.length > 0
+            ? cat.subcategories.map((sub: any) => {
+              const subProducts = categoryProducts?.filter(
+                (p: any) => p.subcategory === sub.id
+              );
+              return {
+                heading: sub.name,
+                products: subProducts || [],
+              };
+            })
+            : [
+              // no subcategories → attach products directly
+              {
+                heading: cat.name,
+                products: categoryProducts || [],
+              },
+            ];
 
-      return {
-        title: cat.name,
-        megaMenu,
-      };
-    }) || [];
+        return {
+          title: cat.name,
+          megaMenu,
+        };
+      }) || [];
 
+  console.log(menuItems)
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const openMenu = (i: any) => {
@@ -143,6 +144,8 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
+
+  const totalMenus = menuItems?.slice(0, 7)?.length || 0;
 
   return (
     // <div className="sticky top-0 z-50 bg-white border-b">
@@ -233,7 +236,7 @@ export default function Navbar() {
             {/* Dropdown Menu */}
             {open && isLoggedIn && (
               <div className="absolute right-0 mt-2 w-40 bg-white rounded-md overflow-hidden shadow-md z-[9999]">
-                 {/* <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-md z-50"> */}
+                {/* <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-md z-50"> */}
                 <ul className="flex flex-col text-sm ">
                   <li
                     onClick={() => router.push("/profile?tab=account")}
@@ -326,10 +329,10 @@ export default function Navbar() {
             >
               All products
             </button>
-            {menuItems?.map((item: any, idx: number) => {
+            {menuItems?.slice(0, 6)?.map((item: any, idx: number) => {
               // Only render if there are products
-              const hasProducts = item?.megaMenu?.some((col: any) => col.products?.length > 0);
-              if (!hasProducts) return null;
+              // const hasProducts = item?.megaMenu?.some((col: any) => col.products?.length > 0);
+              // if (!hasProducts) return null;
 
               return (
                 <div key={idx} className="border-b border-[#13cea1] pb-2">
@@ -388,10 +391,16 @@ export default function Navbar() {
             All products
           </Link>
           {menuItems?.slice(0, 7)?.map((item: any, idx: number) => {
-            const hasProducts = item?.megaMenu?.some((col: any) => col.products?.length > 0);
-            if (!hasProducts) return null;
+            // const hasProducts = item?.megaMenu?.some((col: any) => col.products?.length > 0);
+            // if (!hasProducts) return null;
+            const isFirst = idx === 0;
+            const isLast = idx === totalMenus - 1;
 
-            const populatedMegaMenu = item?.megaMenu?.filter((col: any) => col.products?.length > 0);
+            const populatedMegaMenu = item?.megaMenu?.filter(
+              (col: any) => col.products?.length > 0
+            );
+
+            // const populatedMegaMenu = item?.megaMenu?.filter((col: any) => col.products?.length > 0);
 
             return (
               <div
@@ -413,20 +422,34 @@ export default function Navbar() {
                   style={{ left: '0' }}
                 > */}
                 <div
-  className={`
-    absolute top-full mt-7 z-40 bg-white text-black shadow-lg p-4 
-    transform origin-top transition-all duration-200 ease-in-out
-    max-w-[95vw] overflow-x-auto
-    ${activeMenu === idx ? "scale-y-100 opacity-100 pointer-events-auto" : "scale-y-0 opacity-0 pointer-events-none"}
+                  className={`
+    absolute top-full mt-7 z-40
+    bg-white text-black shadow-lg
+    transition-all duration-200 ease-in-out p-4
+    ${activeMenu === idx ? "opacity-100 visible" : "opacity-0 invisible"}
   `}
-  style={{
-    left: "50%",
-    transform: "translateX(-50%)",
-  }}
->
-<div className="grid grid-flow-col auto-cols-max gap-x-10">
+                  style={{
+                    left: isFirst ? "0" : isLast ? "auto" : "50%",
+                    right: isLast ? "0" : "auto",
+                    transform: isFirst || isLast ? "none" : "translateX(-50%)",
+                    maxWidth: "100vw",
+                  }}
+                >
 
-                  {/* <div className={`grid grid-flow-col auto-cols-min gap-x-10`}> */}
+
+
+                  {/* <div
+  className={`
+    absolute top-full left-0 w-screen mt-4 z-40
+    bg-white text-black shadow-lg
+    transition-all duration-200 ease-in-out
+    ${activeMenu === idx ? "opacity-100 visible" : "opacity-0 invisible"}
+  `}
+> */}
+
+                  <div className="grid grid-flow-col auto-cols-max gap-x-10">
+
+                    {/* <div className={`grid grid-flow-col auto-cols-min gap-x-10`}> */}
                     {populatedMegaMenu?.map((col: any, i: number) => (
                       <div key={i}>
                         {col?.heading && (

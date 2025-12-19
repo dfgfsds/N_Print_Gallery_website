@@ -6,7 +6,7 @@ import LatestProducts from "@/components/LatestProducts";
 import ProductGrid from "@/components/ProductGrid";
 import StandupPouchSection from "@/components/StandupPouchSection";
 import { useProducts } from "@/context/ProductsContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import image1 from "../../public/images/carImg1.jpg"
 import image2 from "../../public/images/carImg2.jpg"
 import image3 from "../../public/images/carImg3.jpg"
@@ -31,6 +31,9 @@ export default function Home() {
   const [banners, setBanners] = useState<any[]>([]);
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
   const router = useRouter();
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+
 
   // Filter banners based on type
   const filteredBanners = banners?.filter(banner =>
@@ -42,6 +45,33 @@ export default function Home() {
   ) || [];
 
   const length = visibleBanners.length;
+
+  useEffect(() => {
+    if (length > 0) {
+      setCurrent(0); // 🔥 ALWAYS START FROM FIRST
+    }
+  }, [length]);
+
+  useEffect(() => {
+    if (length <= 1) return;
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = setInterval(() => {
+      setCurrent(prev => {
+        const next = prev + 1;
+        return next >= length ? 0 : next;
+      });
+    }, 5000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [length]);
 
   useEffect(() => {
     if (length <= 1) return;
@@ -127,7 +157,6 @@ export default function Home() {
   };
 
   const handleBannerClick = (banner: any) => {
-    // console.log('Banner clicked:', banner);
     if (banner?.target_url) {
       router.push(banner.target_url); // Always open in same tab
     }
@@ -138,11 +167,20 @@ export default function Home() {
       <div className="relative w-full">
         <div className="relative h-80 overflow-hidden  md:h-96">
           {visibleBanners.map((img, index) => (
+            // <div
+            //   key={index}
+            //   className={`absolute top-0 left-0 w-full h-full transition-opacity duration-700 ${index === current ? "opacity-100" : "opacity-0"
+            //     }`}
+            //   onClick={() => handleBannerClick(img)}
+            // >
             <div
               key={index}
-              className={`absolute top-0 left-0 w-full h-full transition-opacity duration-700 ${index === current ? "opacity-100" : "opacity-0"
-                }`}
-              onClick={() => handleBannerClick(img)}
+              className={`absolute top-0 left-0 w-full h-full transition-opacity duration-700
+    ${index === current
+                  ? "opacity-100 z-20 pointer-events-auto"
+                  : "opacity-0 z-10 pointer-events-none"
+                }
+  `}
             >
               <img
                 src={img.image_url}
