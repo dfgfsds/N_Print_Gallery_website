@@ -18,9 +18,8 @@ export default function SubCategoryProducts() {
     const { cartItem }: any = useCartItem();
 
     const findSubCategoryProduct = products?.data?.products?.filter(
-        (item: any) => item?.subcategory_name?.toLowerCase() === subId?.toLowerCase()
+        (item: any) => item?.subcategory_slug_name === subId
     );
-
 
     const filteredProducts = Array.isArray(findSubCategoryProduct) ? findSubCategoryProduct : [];
     const matchingProductsArray = filteredProducts?.map((product: any, index: number) => {
