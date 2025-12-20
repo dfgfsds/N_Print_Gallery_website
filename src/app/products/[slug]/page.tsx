@@ -530,7 +530,7 @@ export default function ProductPage() {
       }
     }, [images?.length]);
 
-     // ⭐ MOUSE DESKTOP ZOOM
+    // ⭐ MOUSE DESKTOP ZOOM
     const handleMouseMove = (e: any) => {
       if (window.innerWidth < 768) return; // ⛔ MOBILE → dont run hover zoom
 
@@ -554,18 +554,45 @@ export default function ProductPage() {
 
           {/* IMAGE */}
           <div
-            className="relative w-[600px] h-[600px]"
+            // className="relative w-[600px] h-[600px]"
+            // className="relative w-full max-w-[650px]  aspect-[3/4] mx-auto"
+            className="
+  relative
+  mx-auto
+  overflow-hidden
+  w-full h-full          
+  sm:w-[350px] sm:h-[350px]
+  md:w-[480px] md:h-[480px]
+  lg:w-[600px] lg:h-[600px]
+  xl:w-[600px] xl:h-[600px]
+  2xl:w-[600px] 2xl:h-[600px]
+"
             onMouseMove={handleMouseMove}
             onMouseEnter={() => window.innerWidth > 768 && setShowLens(true)}
             onMouseLeave={() => window.innerWidth > 768 && setShowLens(false)}
             onClick={() => window.innerWidth < 768 && setMobileZoom(true)} // ⭐ MOBILE TAP TO ZOOM
           >
-            <img
-              src={images[activeIndex] || emptyImage}
-              alt={name}
-              className="w-full h-auto object-contain rounded-xl shadow-lg"
-            />
-
+            <div className="
+                w-full h-full          
+  sm:w-[350px] sm:h-[350px]
+  md:w-[480px] md:h-[480px]
+  lg:w-[600px] lg:h-[600px]
+  xl:w-[600px] xl:h-[600px]
+  2xl:w-[600px] 2xl:h-[600px]
+              overflow-hidden rounded-xl">
+              <img
+                src={images[activeIndex] || emptyImage}
+                alt={name}
+                className="
+                w-full h-full          
+  sm:w-[350px] sm:h-[350px]
+  md:w-[480px] md:h-[480px]
+  lg:w-[600px] lg:h-[600px]
+  xl:w-[600px] xl:h-[600px]
+  2xl:w-[600px] 2xl:h-[600px]
+              object-contain rounded-xl shadow-lg"
+              />
+            </div>
             {/* DESKTOP LENS */}
             {showLens && (
               <div
@@ -578,7 +605,7 @@ export default function ProductPage() {
             )}
 
             {/* DESKTOP ZOOM BOX */}
-             {showLens && (
+            {showLens && (
               <div
                 className="absolute top-0 left-[105%] w-[450px] h-[450px] border border-gray-300 bg-white shadow-xl rounded-md hidden md:block"
                 style={{
@@ -833,7 +860,7 @@ ch-zoom"
       <div className="max-w-screen-xl mx-auto  gap-16 w-full grid grid-cols-1 md:grid-cols-2 pt-10 pb-2 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
 
         <div className="relative">
-          <nav className="text-xs ml-20 sm:text-base font-semibold mb-6 text-gray-800 flex flex-wrap gap-1">
+          <nav className="text-xs lg:ml-20 sm:text-base font-semibold mb-6 text-gray-800 flex flex-wrap gap-1">
             <Link href="/" className="hover:underline">Home</Link> /
             <Link href="/" onClick={() => router.back()} className="hover:underline">Back</Link> /
             <span className="text-gray-800 font-medium truncate">{selectedVariant?.name ? selectedVariant?.name : selectedVariant?.product_variant_title}</span>
@@ -1114,11 +1141,11 @@ ch-zoom"
                 //                 : "bg-[#13cea1] hover:bg-[#4db49c] text-white cursor-pointer"
                 //               }
                 // `}
-                className={`flex justify-center font-semibold px-6 py-3 rounded-lg w-full transition
+                className={`flex text-2xl font-bold justify-center  px-6 py-3 rounded-lg w-full transition
 bg-[#13cea1] hover:bg-[#4db49c] text-white cursor-pointe"
     `}
               >
-                Buy now <ShoppingCartIcon className="ml-2" />
+                Buy now <ShoppingCartIcon className="text-2xl font-bold ml-2 my-auto" />
               </button>
             )}
           </div>
@@ -1144,7 +1171,7 @@ bg-[#13cea1] hover:bg-[#4db49c] text-white cursor-pointe"
                 input.click();
               }}
               disabled={uploading}
-              className={`mt-3 w-full px-6 py-3 rounded-lg text-white bg-[#13cea1] hover:bg-[#4db49c]
+              className={`mt-3 w-full px-6 py-3 text-2xl font-bold rounded-lg text-white bg-[#13cea1] hover:bg-[#4db49c]
     ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               {uploading ? "Uploading..." : "Upload Designs"}
@@ -1186,7 +1213,8 @@ bg-[#13cea1] hover:bg-[#4db49c] text-white cursor-pointe"
           <h2 className="text-2xl text-gray-700 font-bold">You May also Like</h2>
           <div className="w-20 h-1 bg-[#13cea1] mx-auto mt-2 rounded"></div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
+        {/* <div className="grid grid-cols-1 lg:grid-cols-4 gap-3"> */}
+        <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {products?.data?.products
             ?.filter((product: any) => productData?.data?.data?.product?.category === product?.category)
             ?.slice(0, 8)
