@@ -27,7 +27,7 @@ function CancellationPolicy() {
       {/* <p className="text-gray-600">
         {policy?.data?.refund_and_cancellation_policy}
         </p> */}
-      <div className="text-gray-600" dangerouslySetInnerHTML={{ __html: policy?.data?.refund_and_cancellation_policy }} />
+      <div className="text-gray-600" dangerouslySetInnerHTML={{ __html: policy?.data?.cancellation_policy }} />
     </div>
   );
 }
