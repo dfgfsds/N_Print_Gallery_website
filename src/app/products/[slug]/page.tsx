@@ -500,10 +500,178 @@ export default function ProductPage() {
   //   );
   // }
 
-  const LENS_SIZE = 128;
-  const ZOOM = 2;
+
+//   function ProductImageGallery({ images, name }: any) {
+//     const [activeIndex, setActiveIndex] = useState(0);
+//     const emptyImage = "/no-image.png";
+
+//     const [showLens, setShowLens] = useState(false);
+//     const [lensPos, setLensPos] = useState({ x: 0, y: 0 });
+//     const [bgPos, setBgPos] = useState("0% 0%");
+
+//     // ⭐ Mobile Fullscreen Zoom Modal
+//     const [mobileZoom, setMobileZoom] = useState(false);
+
+//     const handlePrev = () => {
+//       setActiveIndex((prev) => (prev === 0 ? images?.length - 1 : prev - 1));
+//     };
+
+//     const handleNext = () => {
+//       setActiveIndex((prev) => (prev === images?.length - 1 ? 0 : prev + 1));
+//     };
+
+//     useEffect(() => {
+//       if (images?.length > 1) {
+//         const timer = setInterval(handleNext, 5000);
+//         return () => clearInterval(timer);
+//       }
+//     }, [images?.length]);
+
+//     // ⭐ MOUSE DESKTOP ZOOM
+//     const handleMouseMove = (e: any) => {
+//       if (window.innerWidth < 768) return; // ⛔ MOBILE → dont run hover zoom
+
+//       const container = e.currentTarget.getBoundingClientRect();
+
+//       let x = e.clientX - container.left;
+//       let y = e.clientY - container.top;
+
+//       setLensPos({ x, y });
+
+//       let xPercent = (x / container.width) * 100;
+//       let yPercent = (y / container.height) * 100;
+
+//       setBgPos(`${xPercent}% ${yPercent}%`);
+//     };
 
 
+//     return (
+//       <>
+//         <div className="sticky top-0 flex flex-col items-center space-y-4">
+
+//           {/* IMAGE */}
+//           <div
+//             // className="relative w-[600px] h-[600px]"
+//             // className="relative w-full max-w-[650px]  aspect-[3/4] mx-auto"
+//             className="
+//   relative
+//   mx-auto
+//   overflow-hidden
+//   w-full h-full          
+//   sm:w-[350px] sm:h-[350px]
+//   md:w-[480px] md:h-[480px]
+//   lg:w-[600px] lg:h-[600px]
+//   xl:w-[600px] xl:h-[600px]
+//   2xl:w-[600px] 2xl:h-[600px]
+// "
+//             onMouseMove={handleMouseMove}
+//             onMouseEnter={() => window.innerWidth > 768 && setShowLens(true)}
+//             onMouseLeave={() => window.innerWidth > 768 && setShowLens(false)}
+//             onClick={() => window.innerWidth < 768 && setMobileZoom(true)} // ⭐ MOBILE TAP TO ZOOM
+//           >
+//             <div className="
+//                 w-full h-full          
+//   sm:w-[350px] sm:h-[350px]
+//   md:w-[480px] md:h-[480px]
+//   lg:w-[600px] lg:h-[600px]
+//   xl:w-[600px] xl:h-[600px]
+//   2xl:w-[600px] 2xl:h-[600px]
+//               overflow-hidden rounded-xl">
+//               <img
+//                 src={images[activeIndex] || emptyImage}
+//                 alt={name}
+//                 className="
+//                 w-full h-full          
+//   sm:w-[350px] sm:h-[350px]
+//   md:w-[480px] md:h-[480px]
+//   lg:w-[600px] lg:h-[600px]
+//   xl:w-[600px] xl:h-[600px]
+//   2xl:w-[600px] 2xl:h-[600px]
+//               object-contain rounded-xl shadow-lg"
+//               />
+//             </div>
+//             {/* DESKTOP LENS */}
+//             {showLens && (
+//               <div
+//                 className="absolute w-32 h-32 bg-white/40 border border-gray-400 rounded-md pointer-events-none"
+//                 style={{
+//                   left: lensPos.x - 64,
+//                   top: lensPos.y - 64,
+//                 }}
+//               ></div>
+//             )}
+
+//             {/* DESKTOP ZOOM BOX */}
+//             {showLens && (
+//               <div
+//                 className="absolute top-0 left-[105%] w-[450px] h-[450px] border border-gray-300 bg-white shadow-xl rounded-md hidden md:block"
+//                 style={{
+//                   backgroundImage: `url(${images[activeIndex]})`,
+//                   backgroundSize: "200%",
+//                   backgroundPosition: bgPos,
+//                 }}
+//               ></div>
+//             )}
+
+
+
+//             {/* Prev */}
+//             <button
+//               onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+//               className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 p-2 rounded-full shadow"
+//             >
+//               <ChevronLeft />
+//             </button>
+
+//             {/* Next */}
+//             <button
+//               onClick={(e) => { e.stopPropagation(); handleNext(); }}
+//               className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 p-2 rounded-full shadow"
+//             >
+//               <ChevronRight />
+//             </button>
+//           </div>
+
+//           {/* Thumbnails */}
+//           <div className="flex gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+//             {images.map((img: any, idx: number) => (
+//               <button
+//                 key={idx}
+//                 onClick={() => setActiveIndex(idx)}
+//                 className={`border-2 rounded-lg overflow-hidden flex-shrink-0 ${activeIndex === idx ? "border-blue-500" : "border-transparent"
+//                   }`}
+//               >
+//                 <img
+//                   src={img || emptyImage}
+//                   alt={`${name} thumbnail ${idx + 1}`}
+//                   className="w-20 h-20 object-cover rounded-md"
+//                 />
+//               </button>
+//             ))}
+//           </div>
+//         </div>
+
+//         {/* ⭐ MOBILE FULLSCREEN ZOOM MODAL */}
+//         {mobileZoom && (
+//           <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
+//             <button
+//               onClick={() => setMobileZoom(false)}
+//               className="absolute top-5 right-5 text-white text-3xl"
+//             >
+//               ✕
+//             </button>
+
+//             {/* Pinch Zoom */}
+//             <img
+//               src={images[activeIndex]}
+//               className="w-full h-auto max-w-full max-h-full object-contain touch-pan-y touch-pin
+// ch-zoom"
+//             />
+//           </div>
+//         )}
+//       </>
+//     );
+//   }
   function ProductImageGallery({ images, name }: any) {
     const [activeIndex, setActiveIndex] = useState(0);
     const emptyImage = "/no-image.png";
@@ -547,52 +715,24 @@ export default function ProductPage() {
       setBgPos(`${xPercent}% ${yPercent}%`);
     };
 
-
     return (
       <>
         <div className="sticky top-0 flex flex-col items-center space-y-4">
 
           {/* IMAGE */}
           <div
-            // className="relative w-[600px] h-[600px]"
-            // className="relative w-full max-w-[650px]  aspect-[3/4] mx-auto"
-            className="
-  relative
-  mx-auto
-  overflow-hidden
-  w-full h-full          
-  sm:w-[350px] sm:h-[350px]
-  md:w-[480px] md:h-[480px]
-  lg:w-[600px] lg:h-[600px]
-  xl:w-[600px] xl:h-[600px]
-  2xl:w-[600px] 2xl:h-[600px]
-"
+            className="relative  w-[800px] h-[800px] max-w-full"
             onMouseMove={handleMouseMove}
             onMouseEnter={() => window.innerWidth > 768 && setShowLens(true)}
             onMouseLeave={() => window.innerWidth > 768 && setShowLens(false)}
             onClick={() => window.innerWidth < 768 && setMobileZoom(true)} // ⭐ MOBILE TAP TO ZOOM
           >
-            <div className="
-                w-full h-full          
-  sm:w-[350px] sm:h-[350px]
-  md:w-[480px] md:h-[480px]
-  lg:w-[600px] lg:h-[600px]
-  xl:w-[600px] xl:h-[600px]
-  2xl:w-[600px] 2xl:h-[600px]
-              overflow-hidden rounded-xl">
-              <img
-                src={images[activeIndex] || emptyImage}
-                alt={name}
-                className="
-                w-full h-full          
-  sm:w-[350px] sm:h-[350px]
-  md:w-[480px] md:h-[480px]
-  lg:w-[600px] lg:h-[600px]
-  xl:w-[600px] xl:h-[600px]
-  2xl:w-[600px] 2xl:h-[600px]
-              object-contain rounded-xl shadow-lg"
-              />
-            </div>
+            <img
+              src={images[activeIndex] || emptyImage}
+              alt={name}
+              className="w-full h-auto object-contain rounded-xl shadow-lg"
+            />
+
             {/* DESKTOP LENS */}
             {showLens && (
               <div
@@ -615,8 +755,6 @@ export default function ProductPage() {
                 }}
               ></div>
             )}
-
-
 
             {/* Prev */}
             <button
@@ -675,7 +813,6 @@ ch-zoom"
       </>
     );
   }
-
 
   const finalProductData = products?.data?.products?.map((item: any) => {
     const wishLists = wishList?.data?.find(
