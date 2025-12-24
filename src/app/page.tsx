@@ -33,8 +33,6 @@ export default function Home() {
   const router = useRouter();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-
-
   // Filter banners based on type
   const filteredBanners = banners?.filter(banner =>
     isMobile ? banner.type === 'Mobile View' : banner.type === 'Web View'
