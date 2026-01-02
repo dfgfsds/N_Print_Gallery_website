@@ -193,7 +193,7 @@ export default function Navbar() {
             <div className="flex items-center space-x-1 pr-1">
               <Headphones className="w-4 h-4" />
               <span>
-                For Enquiries <b>+91 9092036699</b>
+                For Enquiries <b>+91 9167691056</b>
               </span>
             </div>
             <button
