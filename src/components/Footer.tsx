@@ -169,7 +169,7 @@ export default function Footer() {
               <h3 className="font-semibold text-black mb-3">Customer Support</h3>
               <div className="space-y-2">
                 <p>Email: <a href="mailto:business@printongo.com" className="hover:underline">support@nprintgallery.com</a></p>
-                <p>Call: <a href="tel:+919092036699" className="hover:underline">+91 9092036699</a></p>
+                <p>Call: <a href="tel:+919167691056" className="hover:underline">+91 9167691056</a></p>
                 <p>Hours: Mon - Sun | 10:00 AM – 8:00 PM</p>
               </div>
             </div>

@@ -162,7 +162,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="relative w-full">
+      {/* <div className="relative w-full">
         <div className="relative h-80 overflow-hidden  md:h-96">
           {visibleBanners.map((img, index) => (
             // <div
@@ -238,7 +238,64 @@ export default function Home() {
             </svg>
           </span>
         </button>
+      </div> */}
+
+      <div className="relative w-full">
+        {/* Banner container */}
+        <div className="relative w-full aspect-[16/6] overflow-hidden bg-white">
+          {visibleBanners.map((img, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-700
+          ${index === current
+                  ? "opacity-100 z-20 pointer-events-auto"
+                  : "opacity-0 z-10 pointer-events-none"
+                }
+        `}
+              onClick={() => handleBannerClick(img)}
+            >
+              <img
+                src={img.image_url}
+                alt={`Slide ${index + 1}`}
+                className="w-full h-full "
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Dots */}
+        <div className="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3">
+          {visibleBanners.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-2 md:w-3 h-2 md:h-3 rounded-full ${index === current ? "bg-white" : "bg-gray-400"
+                }`}
+            />
+          ))}
+        </div>
+
+        {/* Prev */}
+        <button
+          onClick={prevSlide}
+          className="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4"
+        >
+          <span className="inline-flex items-center justify-center w-6 md:w-10 h-6 md:h-10 rounded-full bg-black/30 hover:bg-black/50">
+            ‹
+          </span>
+        </button>
+
+        {/* Next */}
+        <button
+          onClick={nextSlide}
+          className="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4"
+        >
+          <span className="inline-flex items-center justify-center w-6 md:w-10 h-6 md:h-10 rounded-full bg-black/30 hover:bg-black/50">
+            ›
+          </span>
+        </button>
       </div>
+
 
       <CategoryCarousel />
       {/* <ProductGrid /> */}
