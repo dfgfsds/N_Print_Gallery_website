@@ -191,7 +191,7 @@ export default function Contact() {
                             </div>
                             <div className="flex items-center gap-3">
                                 <Phone className="w-6 h-6 text-green-600" />
-                                <p> +91-9092036699</p>
+                                <p> +91-9167691056</p>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Mail className="w-6 h-6 text-green-600" />
