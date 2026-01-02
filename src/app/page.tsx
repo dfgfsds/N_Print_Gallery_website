@@ -278,20 +278,44 @@ export default function Home() {
         {/* Prev */}
         <button
           onClick={prevSlide}
-          className="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4"
+          className="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer"
         >
-          <span className="inline-flex items-center justify-center w-6 md:w-10 h-6 md:h-10 rounded-full bg-black/30 hover:bg-black/50">
-            ‹
+          <span className="inline-flex items-center justify-center w-6 md:w-10 h-6 md:h-10 rounded-full bg-white/30 hover:bg-white/50">
+            <svg
+              className=" w-3 md:w-4  h-3 md:h-4 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 6 10"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 1 1 5l4 4"
+              />
+            </svg>
           </span>
         </button>
 
         {/* Next */}
         <button
           onClick={nextSlide}
-          className="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4"
+          className="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer"
         >
-          <span className="inline-flex items-center justify-center w-6 md:w-10 h-6 md:h-10 rounded-full bg-black/30 hover:bg-black/50">
-            ›
+          <span className="inline-flex items-center justify-center w-6 md:w-10 h-6 md:h-10 rounded-full bg-white/30 hover:bg-white/50">
+            <svg
+              className="w-3 md:w-4  h-3 md:h-4 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 6 10"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M1 9l4-4-4-4"
+              />
+            </svg>
           </span>
         </button>
       </div>
