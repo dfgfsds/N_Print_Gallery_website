@@ -350,15 +350,15 @@ export default function Home() {
           ))}
       </div> */}
 
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 px-5">
+      {/* <div className="mt-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4 px-5">
         {filteredBanners
-          ?.filter((img: any) => img?.is_offer === true)
+          ?.filter((img: any) => img?.is_offer === false)
           ?.slice(0, 2)
           ?.map((img: any, index: number) => (
             <div key={index}>
               <div
                 onClick={() => handleBannerClick(img)}
-                className="relative w-full aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden shadow-md"
+                className="relative w-full aspect-[16/9] rounded-lg overflow-hidden "
               >
                 <Image
                   src={img?.image_url ? img.image_url : EmptyImage}
@@ -370,7 +370,53 @@ export default function Home() {
               </div>
             </div>
           ))}
+      </div> */}
+
+
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 px-5">
+        {filteredBanners
+          ?.filter((img: any) => img?.is_offer === true)
+          ?.slice(0, 2)
+          ?.map((img: any, index: number) => (
+            <div
+              key={index}
+              onClick={() => handleBannerClick(img)}
+              className="w-full rounded-lg overflow-hidden"
+            >
+              <Image
+                src={img?.image_url || EmptyImage}
+                alt="Banner"
+                width={1200}
+                height={600}
+                className="w-full h-auto object-contain"
+                priority
+              />
+            </div>
+          ))}
       </div>
+
+
+      {/* <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 px-5">
+        {filteredBanners
+          ?.filter((img: any) => img?.is_offer === true)
+          ?.slice(0, 2)
+          ?.map((img: any, index: number) => (
+            <div key={index}>
+              <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden shadow-md bg-black">
+                <Image
+                  src={img?.image_url || EmptyImage}
+                  alt="Offer Banner"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
+                  priority={index === 0}
+                />
+              </div>
+
+            </div>
+          ))}
+      </div> */}
+
 
       <ClientsCarousel />
       <Testimonials />
