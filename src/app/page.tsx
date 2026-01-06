@@ -328,7 +328,7 @@ export default function Home() {
       <WhyChooseUs />
       {/* <PortfolioShowcase/> */}
 
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 px-5">
+      {/* <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 px-5">
 
         {filteredBanners
           ?.filter((img: any) => img?.is_offer === true)
@@ -348,8 +348,29 @@ export default function Home() {
               </div>
             </div>
           ))}
-      </div>
+      </div> */}
 
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 px-5">
+        {filteredBanners
+          ?.filter((img: any) => img?.is_offer === true)
+          ?.slice(0, 2)
+          ?.map((img: any, index: number) => (
+            <div key={index}>
+              <div
+                onClick={() => handleBannerClick(img)}
+                className="relative w-full aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden shadow-md"
+              >
+                <Image
+                  src={img?.image_url ? img.image_url : EmptyImage}
+                  alt="Offer Banner"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </div>
+          ))}
+      </div>
 
       <ClientsCarousel />
       <Testimonials />
