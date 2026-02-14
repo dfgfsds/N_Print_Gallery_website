@@ -131,7 +131,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 onClick={() => onView()}
             >
                 {/* Image Container */}
-                <div className="relative w-full aspect-[5/4] flex items-center justify-center bg-white">
+                <div className="relative w-full aspect-[5/5] flex items-center justify-center bg-white">
                     {discountBadge && (
                         <span className="absolute z-10 top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-md">
                             {discountBadge}

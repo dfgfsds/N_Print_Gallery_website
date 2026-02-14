@@ -1,6 +1,6 @@
 export const baseUrl = 'https://ecomapi.ftdigitalsolutions.org';
 // export const baseUrl = 'https://test-ecomapi.justvy.in';
-// const baseUrl ='http://82.29.161.36'
+// const baseUrl ='http://82.29.161.36';
 // export const baseUrl = 'https://gubera-test-api.justvy.in';
 
 const cartCreate = `${baseUrl}/api/carts/`;
